@@ -1,0 +1,111 @@
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    color: #FFFBEB;
+    background: linear-gradient(to right, #495579 30%, #263159 70%);
+}
+
+.login-container {
+    display: flex;
+    align-items: center; /* Vertikal tengah */
+    height: 100vh;
+}
+
+.form-section {
+    width: 400px; /* Lebar tetap untuk form */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 40px;
+    margin-left: 60px; /* Memberi jarak dari kiri */
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #DCF2F1;
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    font-size: 16px;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-top: 5px;
+}
+
+button {
+    background-color: #DCF2F1;
+    color: #263159;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.register-text {
+    margin-top: 15px;
+}
+
+.register-text a,
+.forgot-password a {
+    color: #FFFBEB;
+    text-decoration: underline;
+}
+
+.image-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.image-section img {
+    width: 70%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+    .form-section {
+        width: 100%;
+        height: auto;
+    }
+    .image-section {
+        display: none; /* Sembunyikan gambar di layar kecil */
+    }
+}

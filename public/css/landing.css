@@ -1,0 +1,222 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #1d2b53;
+            color: #ffffff;
+        }
+
+        /* HERO SECTION */
+        /* Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* supaya logo di kiri dan button di kanan */
+            padding: 3rem 10%;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #FFD66B, #FFFBEB);
+            -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
+            background-clip: text;
+            color: transparent; /* Membuat warna teks asli transparan */
+            -webkit-text-fill-color: transparent; /* Untuk Safari */
+        }
+
+        /* Hero */
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 4rem 10%;
+            gap: 2rem;
+        }
+
+        .hero-text {
+            max-width: 550px;
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-text h1 span.highlight {
+            background: linear-gradient(50deg, #FFD66B, #FFFBEB);
+            -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
+            background-clip: text;
+            color: transparent; /* Membuat warna teks asli transparan */
+            -webkit-text-fill-color: transparent; /* Untuk Safari */
+        }
+
+        .hero-text p {
+            color: #b8c1d1;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, #FFD66B, #FFE7A0);
+            color: #1d2b53;
+            padding: 0.5rem 1.2rem; /* lebih kecil dari sebelumnya */
+            font-size: 0.9rem;       /* perkecil teksnya */
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 214, 107, 0.4);
+        }
+
+        /* Hero Image Shape */
+        .hero-image img {
+            display: block;
+            width: 500px;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-image img {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+
+        /* ABOUT SECTION */
+        .about-section {
+            background-color: #1d2b53;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .about-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* rata atas */
+            gap: 2rem;
+            padding: 4rem 10%;
+        }
+
+        .about-title h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #FFD66B, #FFFBEB);
+            -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
+            background-clip: text;
+            color: transparent; /* Membuat warna teks asli transparan */
+            -webkit-text-fill-color: transparent; /* Untuk Safari */
+            font-weight: 700;
+            text-align: left; /* rata kiri */
+            margin-left: 0; /* pastikan nggak ada margin aneh */
+            margin-bottom: 1rem;
+        }
+
+        .about-left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* biar ngikut kiri */
+        gap: 1rem;
+        }
+
+        .about-image img {
+            max-width: 400px;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        .arrow {
+            width: 150px;
+            height: 150px;
+            background: url('/public/images/arrow.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .about-text {
+            max-width: 550px;
+        }
+
+        .about-text h2 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #FFD66B, #FFFBEB);
+            -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
+            background-clip: text;
+            color: transparent; /* Membuat warna teks asli transparan */
+            -webkit-text-fill-color: transparent; /* Untuk Safari */
+        }
+
+        .about-text p {
+            color: #b8c1d1;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        /* FOOTER */
+        .footer {
+            background-color: #1d2b53;
+            color: #fff;
+            padding: 2rem 8%;
+            font-family: Arial, sans-serif;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between; /* posisi kolom ke tengah */
+            flex-wrap: wrap;
+            gap: 4rem;
+            
+        }
+
+        .footer-left,
+        .footer-right {
+            flex: 1 1 300px; /* biar proporsional */
+            max-width: 300px;
+        }
+
+        .footer-left h3,
+        .footer-right h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-left p,
+        .footer-right p {
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .footer-right i {
+            margin-right: 8px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 2rem 0 1rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+        }
