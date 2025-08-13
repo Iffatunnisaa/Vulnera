@@ -44,6 +44,8 @@ label {
     margin-top: 15px;
 }
 
+input[type="fullname"],
+input[type="username"],
 input[type="email"],
 input[type="password"] {
     width: 100%;
