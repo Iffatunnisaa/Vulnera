@@ -11,27 +11,34 @@
         
         <!-- Form kiri -->
         <div class="form-section">
-            <div class="w-full max-w-md flex flex-col">
+            <div class="form-wrapper">
                 <h1>Masuk ke Akun Vulnera</h1>
-            <form action="/login" method="POST">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <form action="/login" method="POST">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
 
-                <label for="password">Kata Sandi</label>
-                <div class="password-wrapper">
-                    <input type="password" id="password" name="password" required>
-                    <span class="toggle-password" id="togglePassword">👁</span>
-                </div>
+                    <label for="password">Kata Sandi</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
+                        <span class="toggle-password" id="togglePassword">
+                            <img id="eyeIcon" src="/public/images/eye_closed_icon_173166.svg" width="22" height="22" alt="Hide Password">
+                        </span>
 
-                <div class="forgot-password">
-                    <a href="#">Lupa Kata Sandi?</a>
-                </div>
+                    </div>
 
-                <button type="submit">Masuk</button>
-            </form>
-            <p class="register-text">Belum punya akun? <a href="/register">Daftar disini</a></p>
+                    <div class="forgot-password">
+                        <a href="#">Lupa Kata Sandi?</a>
+                    </div>
+
+                    <div class="button-center">
+                        <button type="submit">Masuk</button>
+                    </div>
+                </form>
+                <p class="register-text">
+                    Belum punya akun? <a href="/register">Daftar disini</a>
+                </p>
             </div>
-            
+
         </div>
 
         <!-- Gambar kanan -->
@@ -43,11 +50,15 @@
     <script>
         const togglePassword = document.getElementById("togglePassword");
         const passwordField = document.getElementById("password");
+        const eyeIcon = document.getElementById("eyeIcon");
+
+        const eyeOpen = '/public/images/eye_closed_icon_173166.svg';
+        const eyeClosed = '/public/images/view_vision_eye_icon_195036.svg';
 
         togglePassword.addEventListener("click", () => {
-            const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
-            passwordField.setAttribute("type", type);
-            togglePassword.textContent = type === "password" ? "👁" : "🔒";
+            const isPassword = passwordField.type === "password";
+            passwordField.type = isPassword ? "text" : "password";
+            eyeIcon.src = isPassword ? eyeClosed : eyeOpen;
         });
     </script>
 </body>

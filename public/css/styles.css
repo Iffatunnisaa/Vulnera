@@ -7,7 +7,7 @@ body {
 
 .login-container {
     display: flex;
-    align-items: center; /* Vertikal tengah */
+    align-items: center;
     height: 100vh;
 }
 
@@ -17,11 +17,26 @@ body {
     flex-direction: column;
     justify-content: center;
     padding: 0 40px;
-    margin-left: 60px; /* Memberi jarak dari kiri */
+    margin-left: 100px;
+    transform: translateX(40px);
 }
 
-h1 {
+.form-wrapper {
+    font-size: 0.9rem;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.form-wrapper h1{
+    font-size: 2rem;
+    background: linear-gradient(50deg, #FFD66B, #FFFBEB);
+    -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
+    background-clip: text;
+    color: transparent; /* Membuat warna teks asli transparan */
+    -webkit-text-fill-color: transparent; /* Untuk Safari */
     margin-bottom: 20px;
+    text-align: center;
 }
 
 label {
@@ -37,6 +52,7 @@ input[type="password"] {
     border: none;
     border-radius: 5px;
     margin-top: 5px;
+    font-size: 14px;
 }
 
 .password-wrapper {
@@ -51,6 +67,8 @@ input[type="password"] {
     cursor: pointer;
     user-select: none;
     font-size: 16px;
+    width: 24px;  /* lebar tetap supaya tidak geser */
+    text-align: center;
 }
 
 .forgot-password {
@@ -58,23 +76,32 @@ input[type="password"] {
     margin-top: 5px;
 }
 
+.button-center {
+    text-align: center;
+}
+
 button {
-    background-color: #DCF2F1;
-    color: #263159;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 20px;
-    cursor: pointer;
-    font-weight: bold;
+    display: inline-block;
+    background: linear-gradient(to right, #FFD66B, #FFE7A0);
+    color: #1d2b53;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none; /* ← ini hapus border hitam */
+    outline: none; /* opsional, hilangkan outline saat fokus */
 }
 
 button:hover {
-    opacity: 0.9;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 214, 107, 0.4);
 }
 
 .register-text {
     margin-top: 15px;
+    text-align: center;
 }
 
 .register-text a,
@@ -88,6 +115,7 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: right;
+
 }
 
 .image-section img {
@@ -101,11 +129,7 @@ button:hover {
     .login-container {
         flex-direction: column;
     }
-    .form-section {
-        width: 100%;
-        height: auto;
-    }
     .image-section {
-        display: none; /* Sembunyikan gambar di layar kecil */
+        display: none;
     }
 }
