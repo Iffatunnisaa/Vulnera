@@ -172,11 +172,105 @@
             text-align: justify;
         }
 
+        /* FEEDBACK */
+        .feedback-section {
+        background-color: #1d2b53; /* warna biru gelap */
+        padding: 50px 10%;
+        display: flex;
+        justify-content: center;
+        }
+
+        .feedback-container {
+        display: flex;
+        gap: 50px;
+        max-width: 1200px;
+        width: 100%;
+        }
+
+        .feedback-text {
+        flex: 1;
+        color: white;
+        }
+
+        .feedback-text h2 {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        background: linear-gradient(45deg, #FFD66B, #FFFBEB);
+        -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
+        background-clip: text;
+        color: transparent; /* Membuat warna teks asli transparan */
+        -webkit-text-fill-color: transparent; /* Untuk Safari */
+        }
+
+        .feedback-text p {
+        color: #b8c1d1;
+        font-size: 1.2rem;
+        }
+
+        .feedback-form {
+        flex: 1;
+        max-width: 550%;
+        display: flex;
+        padding: 3rem 10%;
+        }
+
+        .feedback-form form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        }
+
+        .feedback-form input,
+        .feedback-form textarea {
+        background-color: rgba(73, 85, 121, 0.69);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 1rem;
+        color: #b8c1d1;
+        outline: none;
+        }
+
+        .feedback-form input::placeholder,
+        .feedback-form textarea::placeholder {
+        color: rgba(200, 200, 200, 0.8);
+        font-size: 0.9rem;
+        }
+
+        .feedback-form input:focus,
+        .feedback-form textarea:focus {
+        border-color: #4f7cff;
+        }
+
+        .feedback-form textarea {
+        min-height: 150px;
+        resize: none;
+        }
+
+        .feedback-form button {
+        display: inline-block;
+        background: linear-gradient(to right, #FFD66B, #FFE7A0);
+        color: #1d2b53;
+        padding: 0.5rem 1.2rem; /* lebih kecil dari sebelumnya */
+        font-size: 0.9rem;       /* perkecil teksnya */
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none; /* ← ini hapus border hitam */
+        outline: none; /* opsional, hilangkan outline saat fokus */
+        }
+
+        .feedback-form button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 214, 107, 0.4);
+        }
+
         /* FOOTER */
         .footer {
             background-color: #1d2b53;
             color: #fff;
-            padding: 2rem 8%;
+            padding: 3rem 10%;
             font-family: Arial, sans-serif;
         }
 
@@ -192,6 +286,7 @@
         .footer-right {
             flex: 1 1 300px; /* biar proporsional */
             max-width: 300px;
+            text-align: justify;
         }
 
         .footer-left h3,
