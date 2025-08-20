@@ -1,242 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Vulnera</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            min-height: 100vh;
-            background: linear-gradient(to right, #495579 30%, #263159 70%);
-        }
-        
-        .left-section {
-            width: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            
-        }
-        
-        .right-section {
-            width: 50%;
-            background-image: url('/public/images/login.jpeg');
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .login-header h2 {
-            font-size: 1.875rem;
-            font-weight: bold;
-            background: linear-gradient(50deg, #FFD66B, #FFFBEB);
-            -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
-            background-clip: text;
-            color: transparent; /* Membuat warna teks asli transparan */
-            -webkit-text-fill-color: transparent; /* Untuk Safari */
-            margin-bottom: 0.1rem;
-            text-align: center;
-        }
-        
-        .error-message {
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background-color: #FEE2E2;
-            color: #B91C1C;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        label {
-            display: block;
-            color: #FFFBEB;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
-        input {
-            width: 100%;
-            padding: 0.5rem 1rem;
-            border: 1px solid #D1D5DB;
-            border-radius: 0.5rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-        
-        input:focus {
-            border-color: transparent;
-            box-shadow: 0 0 0 2px rgb(127, 199, 217);
-        }
-        
-        .password-container {
-            position: relative;
-        }
-        
-        .toggle-password {
-            position: absolute;
-            right: 0.1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #6B7280;
-        }
-        
-        .toggle-password:hover {
-            color: #374151;
-        }
-        
-        .forgot-password {
-            text-align: right;
-            margin-top: 0.25rem;
-        }
-        
-        .forgot-password a {
-            color: #DCF2F1;
-            font-size: 0.75rem;
-            text-decoration: none;
-        }
-        
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-        
-        .login-button {
-            display: inline-block;
-            background: linear-gradient(to right, #FFD66B, #FFE7A0);
-            color: #1d2b53;
-            padding: 0.5rem 1.2rem;
-            font-size: 0.9rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none; /* ← ini hapus border hitam */
-            outline: none; /* opsional, hilangkan outline saat fokus */
-        }
-        
-        .login-button:hover {
-            background: linear-gradient(to right, #FFD66B, #FFE7A0);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 214, 107, 0.4);
-        }
-        
-        .login-button:focus {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 214, 107, 0.4);
-        }
-        
-        .signup-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.875rem;
-            color: #DCF2F1;
-        }
-        
-        .signup-link a {
-            color: #7FC7D9;
-            font-weight: 500;
-            text-decoration: none;
-        }
-        
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | Vulnera</title>
 </head>
-<body>
-    <!-- Bagian Kiri: Form Login -->
-    <div class="left-section">
-        <div class="login-container">
-            <div class="login-header">
-                <h2>Masuk ke Akun Vulnera</h2>
-            </div>
-            
-            <form class="login-form" method="POST" action="/auth/login">
-                <input type="hidden" name="_csrf">
-                
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Masukkan Email"
-                        autofocus
-                    />
-                </div>
+<body style="margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display:flex; min-height:100vh; background:linear-gradient(to right, #495579 30%, #263159 70%);">
+  
+  <!-- Bagian Kiri: Form Login -->
+  <div style="width:50%; display:flex; align-items:center; justify-content:center; padding:2rem;">
+    <div style="width:100%; max-width:400px; display:flex; flex-direction:column;">
+      
+      <!-- Header -->
+      <div style="text-align:center; margin-bottom:2rem;">
+        <h2 style="font-size:1.875rem; font-weight:bold; background:linear-gradient(50deg, #FFD66B, #FFFBEB); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; margin-bottom:0.1rem; text-align:center;">
+          Masuk ke Akun Vulnera
+        </h2>
+      </div>
 
-                <div class="form-group">
-                    <label for="password">Kata Sandi</label>
-                    <div class="password-container">
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            placeholder="Masukkan Password"
-                        />
-                        <button type="button" onclick="togglePassword()" class="toggle-password">
-                            <span id="eye-icon">🔒</span>
-                        </button>
-                    </div>
-                    <div class="forgot-password">
-                        <a href="/forgot-password">Lupa kata sandi?</a>
-                    </div>
-                </div>
+      <!-- Form -->
+      <form method="POST" action="/auth/login" style="display:flex; flex-direction:column;">
+        <input type="hidden" name="_csrf">
 
-                <button type="submit" class="login-button">
-                    Masuk
-                </button>
-            </form>
+        <!-- Email -->
+        <div style="margin-bottom:1rem;">
+          <label for="email" style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Masukkan Email" 
+            autofocus
+            style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+            onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+            onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
+          />
+        </div>
 
-            <div class="signup-link">
-                <p>Belum punya akun? <a href="/auth/register">Daftar disini</a></p>
+        <!-- Password -->
+        <div style="margin-bottom:1rem;">
+          <label for="password" style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Kata Sandi</label>
+          <div style="position:relative;">
+            <input 
+              id="password" 
+              name="password" 
+              type="password" 
+              placeholder="Masukkan Password"
+              style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+              onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+              onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
+            />
+            <button 
+              type="button" 
+              onclick="togglePassword()" 
+              style="position:absolute; right:0.1rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#6B7280;"
+              onmouseover="this.style.color='#374151';"
+              onmouseout="this.style.color='#6B7280';"
+            >
+              <span id="eye-icon">🔒</span>
+            </button>
+          </div>
+          <div style="width:100%; font-weight:500px; margin: right 1px; text-align:right; margin-top:0.25rem;">
+            <a href="/forgot-password" 
+                style="color:#DCF2F1; font-size:0.75rem; text-decoration:none;" 
+                onmouseover="this.style.textDecoration='underline';" 
+                onmouseout="this.style.textDecoration='none';">
+                Lupa kata sandi?
+            </a>
             </div>
         </div>
+
+        <!-- Tombol Login -->
+        <button 
+            type="submit" 
+            style="display:inline-block; background:linear-gradient(to right, #FFD66B, #FFE7A0); color:#263159; padding:0.5rem 1.2rem; font-size:0.9rem; border-radius:25px; font-weight:600; border:none; outline:none; cursor:pointer; transition:all 0.3s ease; margin: 1rem auto; text-align:center;"
+            onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 5px 15px rgba(255,214,107,0.4)';"
+            onmouseout="this.style.transform='none'; this.style.boxShadow='none';"
+            >
+            Masuk
+            </button>
+      </form>
+
+      <!-- Link Signup -->
+      <div style="text-align:center; font-size:0.875rem; color:#DCF2F1;">
+        <p>Belum punya akun? <a href="/auth/register" style="color:#7FC7D9; font-weight:500; text-decoration:none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Daftar disini</a></p>
+      </div>
     </div>
+  </div>
 
-    <!-- Bagian Kanan: Background Gambar Daun -->
-    <div class="right-section"></div>
+  <!-- Bagian Kanan: Background -->
+  <div style="width:50%; background-image:url('/public/images/login.jpeg'); background-size:cover; background-position:center;"></div>
 
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById("password");
-            const eyeIcon = document.getElementById("eye-icon");
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                eyeIcon.innerHTML = "👁️";
-            } else {
-                passwordInput.type = "password";
-                eyeIcon.innerHTML = "🔒";
-            }
-        }
-        
-        // Auto-focus email field
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("email")?.focus();
-        });
-    </script>
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById("password");
+      const eyeIcon = document.getElementById("eye-icon");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeIcon.innerHTML = "👁️";
+      } else {
+        passwordInput.type = "password";
+        eyeIcon.innerHTML = "🔒";
+      }
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("email")?.focus();
+    });
+  </script>
 </body>
 </html>
