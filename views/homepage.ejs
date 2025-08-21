@@ -1,269 +1,148 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vulnera - Cybersecurity Simulation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <style>
-    * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background-color: #1d2b53;
-            color: #ffffff;
-        }
-
-        /* Navbar */
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* supaya logo di kiri dan button di kanan */
-            padding: 3rem 10%;
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #FFD66B, #FFFBEB);
-            -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
-            background-clip: text;
-            color: transparent; /* Membuat warna teks asli transparan */
-            -webkit-text-fill-color: transparent; /* Untuk Safari */
-        }
-
-        .btn {
-            display: inline-block;
-            background: linear-gradient(to right, #FFD66B, #FFE7A0);
-            color: #1d2b53;
-            padding: 0.5rem 1.2rem; /* lebih kecil dari sebelumnya */
-            font-size: 0.9rem;       /* perkecil teksnya */
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 214, 107, 0.4);
-        }
-
-        /* FEEDBACK */
-        .feedback-section {
-        background-color: #1d2b53; /* warna biru gelap */
-        padding: 50px 10%;
-        display: flex;
-        justify-content: center;
-        }
-
-        .feedback-container {
-        display: flex;
-        gap: 50px;
-        max-width: 1200px;
-        width: 100%;
-        }
-
-        .feedback-text {
-        flex: 1;
-        color: white;
-        }
-
-        .feedback-text h2 {
-        font-size: 3rem;
-        margin-bottom: 15px;
-        background: linear-gradient(45deg, #FFD66B, #FFFBEB);
-        -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
-        background-clip: text;
-        color: transparent; /* Membuat warna teks asli transparan */
-        -webkit-text-fill-color: transparent; /* Untuk Safari */
-        }
-
-        .feedback-text p {
-        color: #b8c1d1;
-        font-size: 1.1rem;
-        }
-
-        .feedback-form {
-        flex: 1;
-        max-width: 550%;
-        display: flex;
-        padding: 3rem 10%;
-        }
-
-        .feedback-form form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        }
-
-        .feedback-form input,
-        .feedback-form textarea {
-        background-color: rgba(73, 85, 121, 0.69);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        padding: 12px;
-        font-size: 1rem;
-        color: #b8c1d1;
-        outline: none;
-        }
-
-        .feedback-form input::placeholder,
-        .feedback-form textarea::placeholder {
-        color: rgba(200, 200, 200, 0.8);
-        font-size: 0.9rem;
-        }
-
-        .feedback-form input:focus,
-        .feedback-form textarea:focus {
-        border-color: #4f7cff;
-        }
-
-        .feedback-form textarea {
-        min-height: 150px;
-        resize: none;
-        }
-
-        .feedback-form button {
-        display: inline-block;
-        background: linear-gradient(to right, #FFD66B, #FFE7A0);
-        color: #1d2b53;
-        padding: 0.5rem 1.2rem; /* lebih kecil dari sebelumnya */
-        font-size: 0.9rem;       /* perkecil teksnya */
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none; /* ← ini hapus border hitam */
-        outline: none; /* opsional, hilangkan outline saat fokus */
-        }
-
-        .feedback-form button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(255, 214, 107, 0.4);
-        }
-
-        /* FOOTER */
-        .footer {
-            background-color: #1d2b53;
-            color: #b8c1d1;
-            padding: 3rem 10%;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .footer-container {
-            display: flex;
-            justify-content: space-between; /* posisi kolom ke tengah */
-            flex-wrap: wrap;
-            gap: 4rem;
-            
-        }
-
-        .footer-left,
-        .footer-right {
-            flex: 1 1 300px; /* biar proporsional */
-            max-width: 300px;
-            text-align: justify;
-        }
-
-        .footer-left h3,
-        .footer-right h3 {
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .footer-left p,
-        .footer-right p {
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        .footer-right i {
-            margin-right: 8px;
-        }
-
-        hr {
-            border: 0;
-            border-top: 1px solid #b8c1d1;
-            margin: 2rem 0 1rem;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            font-size: 0.9rem;
-        }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vulnera - Cybersecurity Simulation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<body style="margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;background-color:#1d2b53;color:#ffffff;">
 
 <!-- Navbar -->
-<header class="navbar">
-    <div class="logo">Vulnera</div>
-    <a href="#" class="btn">Keluar</a>
+<header class="navbar" style="display:flex;align-items:center;justify-content:space-between;padding:3rem 10%;">
+  <div class="logo" style="font-size:2rem;font-weight:700;background:linear-gradient(45deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">Vulnera</div>
+  <a href="/login" 
+  style="display:inline-block; background:linear-gradient(to right,#FFD66B,#FFE7A0); color:#263159; 
+         padding:0.5rem 1.2rem; font-size:0.9rem; border-radius:25px; font-weight:600; 
+         transition:all 0.3s ease; text-decoration:none;"
+  onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 5px 15px rgba(255,214,107,0.4)';"
+  onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+  Keluar
+</a>
+
 </header>
 
-<!-- Contact / Feedback Section -->
-<section class="feedback-section">
-  <div class="feedback-container">
-    
-    <!-- Bagian kiri -->
-    <div class="feedback-text">
-      <h2>Suara<span class="highlight">kan Ide Anda</span></h2>
-      <p>
-        Kami siap mendengar ide dan kebutuhan Anda untuk keamanan digital yang lebih baik.
-      </p>
-    </div>
+<!-- Hero Section -->
+<section class="hero" style="display:flex; justify-content:space-between; align-items:flex-start; padding:4rem 10%; gap:2rem;">
+  <div class="hero-text" style="max-width:550px;flex:1;">
+    <h1 style="font-size:3rem; line-height:0.5; margin-bottom:0.3rem; font-weight:700;">
+    <span style="background:linear-gradient(50deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">Latih</span> Kemampuanmu
+    </h1>
 
-    <!-- Bagian kanan -->
-    <div class="feedback-form">
-      <form action="/send-feedback" method="POST">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Masukkan username Anda" required>
+    <h1 style="font-size:3rem; line-height:0.5; margin-bottom:0.3rem; font-weight:700;">
+    <span style="background:linear-gradient(50deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">Simulasi</span> Serangan
+    </h1>
 
-        <label for="message">Pesan</label>
-        <textarea id="message" name="message" placeholder="Tulis pesan Anda di sini" required></textarea>
+    <h1 style="font-size:3rem; line-height:0.5; margin-bottom:0.3rem; font-weight:700;">
+    <span style="background:linear-gradient(50deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">Siber</span> di Lingkungan
+    </h1>
 
-        <div class="feedback-form button">
-            <button type="submit">Kirim</button>
-        </div>
-        
-      </form>
-    </div>
-
+    <h1 style="font-size:3rem; line-height:0.5; margin-bottom:0; font-weight:700;">
+    <span style="background:linear-gradient(50deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">Aman</span>
+    </h1>
+    <p style="color:#b8c1d1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem;text-align:justify;">
+      Akses platform simulasi serangan siber untuk keperluan pembelajaran dan pengujian model deteksi. 
+      Fitur sederhana, aman, dan hanya digunakan untuk tujuan edukasi.
+    </p>
+  </div>
+  <div class="hero-image">
+    <img src="/public/img/hero-img.png" alt="Hacker typing" style="display:block;width:500px;height:auto;border-radius:20px;">
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="footer">
-  <div class="footer-container">
+<!-- About Section -->
+<section class="about-section" style="background-color:#1d2b53;color:white;font-family:'Poppins',sans-serif;">
+  <div class="about-container" style="display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;padding:4rem 10%;">
+    <!-- Bagian kiri -->
+    <div class="about-left" style="display:flex;flex-direction:column;align-items:flex-start;gap:1rem;">
+      <div class="about-title">
+        <h1 style="font-size:3rem;background:linear-gradient(45deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-weight:700;text-align:left;margin-left:0;margin-bottom:1rem;">
+        Apa itu<br>Vulnera?</h1>
+      </div>
+      <div class="about-image">
+        <img src="/public/img/about.png" alt="Ilustrasi keamanan siber" style="max-width:400px;height:auto;border-radius:20px;">
+      </div>
+    </div>
 
+    <!-- Panah di tengah -->
+    <div class="arrow" style="width:150px;height:150px;background:url('/public/images/arrow.png') no-repeat center;background-size:contain;"></div>
+
+    <!-- Bagian kanan -->
+    <div class="about-text" style="max-width:550px;">
+      <p style="color:#b8c1d1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem;text-align:justify;">
+        Vulnera adalah platform simulasi serangan siber berbasis web yang dirancang untuk mendukung
+        pengembangan dan pengujian sistem deteksi ancaman. Dengan menyediakan lingkungan aman bagi pengguna 
+        untuk melakukan serangan simulasi, Vulnera membantu menghasilkan data nyata yang dapat divisualisasikan 
+        dan dianalisis melalui dashboard admin.
+      </p>
+
+      <div class="about-title">
+        <h1 style="font-size:3rem;background:linear-gradient(45deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-weight:700;text-align:left;margin-left:0;margin-bottom:1rem;">About Us</h1>
+      </div>
+      
+      <p style="color:#b8c1d1;font-size:1.1rem;line-height:1.6;margin-bottom:2rem;text-align:justify;">
+        Misi kami adalah menyediakan sarana praktis dan aman bagi peneliti keamanan dan pengembang
+        untuk memahami pola serangan dan dampaknya. Data dari simulasi ini digunakan untuk membangun
+        model deteksi dan pencegahan yang lebih efektif, sekaligus meningkatkan kesadaran akan 
+        keamanan siber.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Feedback Section -->
+  <section style="background-color:#1d2b53; padding:3px 10%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+    
+    <h2 style="font-size:3rem; margin-bottom:15px; background:linear-gradient(45deg,#FFD66B,#FFFBEB); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;">
+      Suara<span style="color:transparent; background:linear-gradient(45deg,#FFD66B,#FFFBEB); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">kan Ide Anda</span>
+    </h2>
+    <p style="color:#DCF2F1; font-size:1.1rem; margin-bottom:2rem; max-width:600px;">
+      Kami siap mendengar ide dan kebutuhan Anda untuk keamanan digital yang lebih baik.
+    </p>
+
+    <form action="/send-feedback" method="POST" style="display:flex; flex-direction:column; gap:15px; width:100%; max-width:500px; text-align:left;">
+      <label for="username" style="font-size:0.9rem; font-weight:500;">Username</label>
+      <input type="text" id="username" name="username" placeholder="Masukkan username Anda" required 
+        style="background-color:rgba(73,85,121,0.69); border:1px solid rgba(255,255,255,0.2); border-radius:12px; padding:12px; font-size:1rem; color:#DCF2F1; outline:none;" />
+
+      <label for="message" style="font-size:0.9rem; font-weight:500;">Pesan</label>
+      <textarea id="message" name="message" placeholder="Tulis pesan Anda di sini" required
+        style="background-color:rgba(73,85,121,0.69); border:1px solid rgba(255,255,255,0.2); border-radius:12px; padding:12px; font-size:1rem; color:#DCF2F1; outline:none; min-height:150px; resize:none;"></textarea>
+
+      <button type="submit" 
+        style="align-self:center; background:linear-gradient(to right,#FFD66B,#FFE7A0); color:#1d2b53; padding:0.5rem 1.2rem; font-size:0.9rem; border-radius:25px; font-weight:600; border:none; cursor:pointer; transition:all 0.3s;">
+        Kirim
+      </button>
+    </form>
+  </section>
+
+<!-- Footer -->
+<footer class="footer" style="background-color:#1d2b53;color:#DCF2F1;padding:3rem 10%;font-family:'Poppins',sans-serif;">
+  <div class="footer-container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:4rem;">
     <!-- Kiri -->
-    <div class="footer-left">
-      <h3>Vulnera</h3>
-      <p>
+    <div class="footer-left" style="flex:1 1 300px;max-width:300px;text-align:justify;">
+      <h3 style="margin-bottom:1rem;font-size:1.1rem;">Vulnera</h3>
+      <p style="line-height:1.6;font-size:0.95rem;">
         platform simulasi serangan siber berbasis web 
         untuk pengujian dan visualisasi deteksi ancaman.
       </p>
     </div>
 
     <!-- Kanan -->
-    <div class="footer-right">
-      <h3>Contact</h3>
-      <p><i class="fas fa-phone"></i> +62 813-6060-6683</p>
-      <p><i class="fas fa-envelope"></i> admin@gmail.com</p>
-      <p>Dinas Komunikasi, Informasi dan Statistik Kota Banda Aceh
-        Jl. Tgk. Abu Lam U, No. 7 Banda Aceh (Komplek Balaikota).</p>
+    <div class="footer-right" style="flex:1 1 300px;max-width:300px;text-align:justify;">
+      <h3 style="margin-bottom:1rem;font-size:1.1rem;">Contact</h3>
+      <p style="line-height:1.6;font-size:0.95rem;"><i class="fas fa-phone" style="margin-right:8px;"></i> +62 813-6060-6683</p>
+      <p style="line-height:1.6;font-size:0.95rem;"><i class="fas fa-envelope" style="margin-right:8px;"></i> admin@gmail.com</p>
+      <p style="line-height:1.6;font-size:0.95rem;">
+        Dinas Komunikasi, Informasi dan Statistik Kota Banda Aceh
+        Jl. Tgk. Abu Lam U, No. 7 Banda Aceh (Komplek Balaikota).
+      </p>
     </div>
-
   </div>
 
-  <hr>
-  <div class="footer-bottom">
+  <hr style="border:0;border-top:1px solid #DCF2F1;margin:2rem 0 1rem;">
+  <div class="footer-bottom" style="text-align:center;font-size:0.9rem;">
     <p>© 2025, All Right Reserved.</p>
   </div>
 </footer>
