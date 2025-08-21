@@ -1,149 +1,147 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title || "Register | OxyPlant" %></title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register | Vulnera</title>
 </head>
-<body>
-  <div class="flex min-h-screen">
-    <!-- Bagian Kiri: Background Gambar Daun -->
-    <div
-      class="w-1/2 min-h-screen bg-cover bg-center"
-      style="background-image: url('/img/d2.jpeg');"
-    >
-    </div>
+<body style="margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display:flex; min-height:100vh; background:linear-gradient(to right, #495579 30%, #263159 70%);">
+  
+  <!-- Bagian Kiri: Form Register -->
+  <div style="width:50%; display:flex; align-items:center; justify-content:center; padding:2rem;">
+    <div style="width:100%; max-width:400px; display:flex; flex-direction:column;">
+      
+      <!-- Header -->
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <h2 style="font-size:1.875rem; font-weight:bold; background:linear-gradient(50deg, #FFD66B, #FFFBEB); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; margin-bottom:0.2rem; text-align:center;">
+          Buat Akun Vulnera
+        </h2>
+      </div>
 
-    <!-- Bagian Kanan: Form Register -->
-    <div class="w-1/2 flex items-center justify-center p-8" style="background-color: #F2F1EB;">
-      <div class="w-full max-w-md flex flex-col">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold text-green-700 mb-2">
-            Buat Akun OxyPlant
-          </h2>
-          <p class="text-gray-600">
-            Satu akun untuk semua produk Garden OxyPlant
-          </p>
+      <!-- Form -->
+      <form method="POST" action="/auth/register" style="display:flex; flex-direction:column;">
+        <input type="hidden" name="_csrf">
+
+        <!-- Nama Lengkap -->
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Nama Lengkap</label>
+          <input 
+            type="text" 
+            name="fullname" 
+            placeholder="Nama lengkap Anda" 
+            style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+            onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+            onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
+          />
         </div>
 
-        <form
-          class="space-y-4 flex-grow flex flex-col"
-          method="POST"
-          action="/register"
-        >
-          <!-- CSRF (kalau kamu pakai csurf middleware di Express) -->
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <!-- Username -->
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Username</label>
+          <input 
+            type="text" 
+            name="username" 
+            placeholder="Username unik" 
+            style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+            onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+            onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
+          />
+        </div>
 
-          <div class="flex-grow space-y-4">
-            <!-- Nama Lengkap -->
-            <div>
-              <label class="block text-gray-700 text-sm font-medium mb-1">Nama Lengkap</label>
-              <input
-                name="fullname"
-                type="text"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition"
-                placeholder="Nama lengkap Anda"
-              />
-            </div>
+        <!-- Email -->
+<div style="margin-bottom:1rem;">
+  <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Email</label>
+  <input 
+    type="email" 
+    name="email" 
+    placeholder="email@example.com" 
+    style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+    onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+    onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
+  />
+</div>
 
-            <!-- Username -->
-            <div>
-              <label class="block text-gray-700 text-sm font-medium mb-1">Username</label>
-              <input
-                name="username"
-                type="text"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition"
-                placeholder="Username unik"
-              />
-            </div>
-
-            <!-- Email -->
-            <div>
-              <label class="block text-gray-700 text-sm font-medium mb-1">Email</label>
-              <input
-                name="email"
-                type="email"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition"
-                placeholder="email@example.com"
-              />
-              <p class="text-xs text-gray-500 mt-1">
-                Kami tidak akan membagikan data pribadi Anda
-              </p>
-            </div>
-
-            <!-- Kata Sandi -->
-            <div>
-              <label class="block text-gray-700 text-sm font-medium mb-1">Kata Sandi</label>
-              <div class="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onclick="togglePassword('password', 'eye-icon')"
-                  class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
-                >
-                  <span id="eye-icon">🔒</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Konfirmasi Kata Sandi -->
-            <div>
-              <label class="block text-gray-700 text-sm font-medium mb-1">Konfirmasi Kata Sandi</label>
-              <div class="relative">
-                <input
-                  id="confirm-password"
-                  name="confirmPassword"
-                  type="password"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onclick="togglePassword('confirm-password', 'confirm-eye-icon')"
-                  class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
-                >
-                  <span id="confirm-eye-icon">🔒</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-auto text-center">
-            <button
-              type="submit"
-              class="w-full max-w-xs bg-gradient-to-r from-green-500 to-green-600 text-white py-2.5 px-4 rounded-lg font-medium hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition shadow-sm"
+        <!-- Kata Sandi -->
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Kata Sandi</label>
+          <div style="position:relative;">
+            <input 
+              id="password" 
+              name="password" 
+              type="password" 
+              placeholder="Masukkan Password"
+              style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+              onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+              onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
+            />
+            <button 
+              type="button" 
+              onclick="togglePassword('password','eye-icon')" 
+              style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#6B7280;"
+              onmouseover="this.style.color='#374151';"
+              onmouseout="this.style.color='#6B7280';"
             >
-              Daftar
+              <span id="eye-icon">🔒</span>
             </button>
           </div>
-        </form>
-
-        <div class="text-center mt-6">
-          <p class="text-sm text-gray-600">
-            Sudah punya akun? <a href="/login" class="text-green-700 font-medium hover:underline">Masuk disini</a>
-          </p>
         </div>
+
+        <!-- Konfirmasi Kata Sandi -->
+        <div style="margin-bottom:1.5rem;">
+          <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Konfirmasi Kata Sandi</label>
+          <div style="position:relative;">
+            <input 
+              id="confirm-password" 
+              name="confirmPassword" 
+              type="password" 
+              placeholder="Ulangi Password"
+              style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+              onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+              onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
+            />
+            <button 
+              type="button" 
+              onclick="togglePassword('confirm-password','confirm-eye-icon')" 
+              style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#6B7280;"
+              onmouseover="this.style.color='#374151';"
+              onmouseout="this.style.color='#6B7280';"
+            >
+              <span id="confirm-eye-icon">🔒</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tombol Register -->
+        <button 
+          type="submit" 
+          style="display:inline-block; background:linear-gradient(to right, #FFD66B, #FFE7A0); color:#263159; padding:0.6rem 1.5rem; font-size:0.95rem; border-radius:25px; font-weight:600; border:none; outline:none; cursor:pointer; transition:all 0.3s ease; margin: 0 auto 1rem auto; text-align:center;"
+          onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 5px 15px rgba(255,214,107,0.4)';"
+          onmouseout="this.style.transform='none'; this.style.boxShadow='none';"
+        >
+          Daftar
+        </button>
+      </form>
+
+      <!-- Link ke Login -->
+      <div style="text-align:center; font-size:0.875rem; color:#DCF2F1;">
+        <p>Sudah punya akun? <a href="/auth/login" style="color:#7FC7D9; font-weight:500; text-decoration:none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Masuk disini</a></p>
       </div>
     </div>
   </div>
 
+  <!-- Bagian Kanan: Background -->
+  <div style="width:50%; background-image:url('/public/images/login.jpeg'); background-size:cover; background-position:center;"></div>
+
   <!-- Script toggle password -->
   <script>
     function togglePassword(inputId, iconId) {
-      const passwordInput = document.getElementById(inputId);
+      const input = document.getElementById(inputId);
       const eyeIcon = document.getElementById(iconId);
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
+      if (input.type === "password") {
+        input.type = "text";
         eyeIcon.textContent = "👁️";
       } else {
-        passwordInput.type = "password";
+        input.type = "password";
         eyeIcon.textContent = "🔒";
       }
     }
