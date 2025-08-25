@@ -1,136 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register | Vulnera</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= title %>
+  </title>
 </head>
-<body style="margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display:flex; min-height:100vh; background:linear-gradient(to right, #495579 30%, #263159 70%);">
-  
+
+<body
+  style="margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display:flex; min-height:100vh; background:linear-gradient(to right, #495579 30%, #263159 70%);">
+
   <!-- Bagian Kiri: Form Register -->
   <div style="width:50%; display:flex; align-items:center; justify-content:center; padding:2rem;">
     <div style="width:100%; max-width:400px; display:flex; flex-direction:column;">
-      
+
       <!-- Header -->
       <div style="text-align:center; margin-bottom:1.5rem;">
-        <h2 style="font-size:1.875rem; font-weight:bold; background:linear-gradient(50deg, #FFD66B, #FFFBEB); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; margin-bottom:0.2rem; text-align:center;">
+        <h2
+          style="font-size:1.875rem; font-weight:bold; background:linear-gradient(50deg, #FFD66B, #FFFBEB); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent; margin-bottom:0.2rem; text-align:center;">
           Buat Akun Vulnera
         </h2>
       </div>
 
-      <!-- Form -->
-      <form method="POST" action="/auth/register" style="display:flex; flex-direction:column;">
-        <input type="hidden" name="_csrf">
-
-        <!-- Nama Lengkap -->
-        <div style="margin-bottom:1rem;">
-          <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Nama Lengkap</label>
-          <input 
-            type="text" 
-            name="fullname" 
-            placeholder="Nama lengkap Anda" 
-            style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
-            onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
-            onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
-          />
-        </div>
-
-        <!-- Username -->
-        <div style="margin-bottom:1rem;">
-          <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Username</label>
-          <input 
-            type="text" 
-            name="username" 
-            placeholder="Username unik" 
-            style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
-            onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
-            onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
-          />
-        </div>
-
-        <!-- Email -->
-<div style="margin-bottom:1rem;">
-  <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Email</label>
-  <input 
-    type="email" 
-    name="email" 
-    placeholder="email@example.com" 
-    style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
-    onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
-    onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
-  />
-</div>
-
-        <!-- Kata Sandi -->
-        <div style="margin-bottom:1rem;">
-          <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Kata Sandi</label>
-          <div style="position:relative;">
-            <input 
-              id="password" 
-              name="password" 
-              type="password" 
-              placeholder="Masukkan Password"
-              style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
-              onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
-              onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
-            />
-            <button 
-              type="button" 
-              onclick="togglePassword('password','eye-icon')" 
-              style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#6B7280;"
-              onmouseover="this.style.color='#374151';"
-              onmouseout="this.style.color='#6B7280';"
-            >
-              <span id="eye-icon">🔒</span>
-            </button>
+      <div class="form-wrapper">
+        <% if (messages.error && messages.error.length> 0) { %>
+          <div class="flash-message" style="background-color:#FF8989;">
+            <%= messages.error[0] %>
           </div>
-        </div>
+          <% } %>
+            <% if (messages.success && messages.success.length> 0) { %>
+              <div class="flash-message success" style="background-color:#9FFF9B;">
+                <%= messages.success[0] %>
+              </div>
+              <% } %>
+                <!-- Form -->
+                <form action="/register" method="post" style="display:flex; flex-direction:column;">
 
-        <!-- Konfirmasi Kata Sandi -->
-        <div style="margin-bottom:1.5rem;">
-          <label style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Konfirmasi Kata Sandi</label>
-          <div style="position:relative;">
-            <input 
-              id="confirm-password" 
-              name="confirmPassword" 
-              type="password" 
-              placeholder="Ulangi Password"
-              style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
-              onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
-              onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';"
-            />
-            <button 
-              type="button" 
-              onclick="togglePassword('confirm-password','confirm-eye-icon')" 
-              style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#6B7280;"
-              onmouseover="this.style.color='#374151';"
-              onmouseout="this.style.color='#6B7280';"
-            >
-              <span id="confirm-eye-icon">🔒</span>
-            </button>
-          </div>
-        </div>
+                  <!-- Nama Lengkap -->
+                  <div class="form-group" style="margin-bottom:1rem;">
+                    <label
+                      style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Nama
+                      Lengkap</label>
+                    <input type="text" name="name" id="name" placeholder="Nama lengkap Anda" required autocomplete="off"
+                      style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+                      onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+                      onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';" />
+                  </div>
 
-        <!-- Tombol Register -->
-        <button 
-          type="submit" 
-          style="display:inline-block; background:linear-gradient(to right, #FFD66B, #FFE7A0); color:#263159; padding:0.6rem 1.5rem; font-size:0.95rem; border-radius:25px; font-weight:600; border:none; outline:none; cursor:pointer; transition:all 0.3s ease; margin: 0 auto 1rem auto; text-align:center;"
-          onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 5px 15px rgba(255,214,107,0.4)';"
-          onmouseout="this.style.transform='none'; this.style.boxShadow='none';"
-        >
-          Daftar
-        </button>
-      </form>
+                  <!-- Email -->
+                  <div class="form-group" style="margin-bottom:1rem;">
+                    <label
+                      style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Email</label>
+                    <input type="email" name="email" id="email" placeholder="email@example.com" required autocomplete="off"
+                      style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+                      onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+                      onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';" />
+                  </div>
 
+                  <!-- Telepon -->
+                  <div class="form-group" style="margin-bottom:1rem;">
+                    <label
+                      style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">No. Telepeon</label>
+                    <input type="text" name="phone" id="phone" placeholder="No. Telepon" required autocomplete="off"
+                      style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+                      onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+                      onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';" />
+                  </div>
+
+                  <!-- Kata Sandi -->
+                  <div class="form-group" style="margin-bottom:1rem;">
+                    <label
+                      style="display:block; color:#FFFBEB; font-size:0.875rem; font-weight:500; margin-bottom:0.5rem;">Kata
+                      Sandi</label>
+                    <div style="position:relative;">
+                      <input type="password" id="password" name="password" placeholder="Masukkan Password" required
+                        style="width:100%; padding:0.5rem 1rem; border:1px solid #D1D5DB; border-radius:0.5rem; outline:none; transition:all 0.3s;"
+                        onfocus="this.style.boxShadow='0 0 0 2px rgb(127,199,217)'; this.style.borderColor='transparent';"
+                        onblur="this.style.boxShadow='none'; this.style.border='1px solid #D1D5DB';" />
+                      <button type="button" onclick="togglePassword('password','eye-icon')"
+                        style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#6B7280;"
+                        onmouseover="this.style.color='#374151';" onmouseout="this.style.color='#6B7280';">
+                        <span id="eye-icon">🔒</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Tombol Register -->
+                  <button type="submit"
+                    style="display:inline-block; background:linear-gradient(to right, #FFD66B, #FFE7A0); color:#263159; padding:0.6rem 1.5rem; font-size:0.95rem; border-radius:25px; font-weight:600; border:none; outline:none; cursor:pointer; transition:all 0.3s ease; margin: 0 auto 1rem auto; text-align:center;"
+                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 5px 15px rgba(255,214,107,0.4)';"
+                    onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+                    Daftar
+                  </button>
+                </form>
+      </div>
       <!-- Link ke Login -->
       <div style="text-align:center; font-size:0.875rem; color:#DCF2F1;">
-        <p>Sudah punya akun? <a href="/login" style="color:#7FC7D9; font-weight:500; text-decoration:none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Masuk disini</a></p>
+        <p>Sudah punya akun? <a href="/login" style="color:#7FC7D9; font-weight:500; text-decoration:none;"
+            onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Masuk
+            disini</a></p>
       </div>
     </div>
   </div>
 
   <!-- Bagian Kanan: Background -->
-  <div style="width:50%; background-image:url('../img/login.jpeg'); background-size:cover; background-position:center;"></div>
+  <div style="width:50%; background-image:url('../img/login.jpeg'); background-size:cover; background-position:center;">
+  </div>
 
   <!-- Script toggle password -->
   <script>
@@ -147,4 +124,5 @@
     }
   </script>
 </body>
+
 </html>
