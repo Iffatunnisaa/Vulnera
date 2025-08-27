@@ -7,25 +7,15 @@
 </head>
 <body style="margin:0; font-family:Arial, sans-serif; background:#0F1035; color:#F8FAFC;">
 
-  <!-- Navbar -->
-  <header class="navbar" style="display:flex;align-items:center;justify-content:space-between;padding:1.5rem 10%; background:#0F1035; box-shadow:0 2px 8px rgba(0,0,0,0.05); position:sticky; top:0; z-index:10;">
-    <div class="logo" style="font-size:2rem;font-weight:700;background:linear-gradient(45deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;">Vulnera</div>
-    <a href="/login" 
-      style="display:inline-block; background:linear-gradient(to right,#FFD66B,#FFE7A0); color:#263159; 
-             padding:0.6rem 1.4rem; font-size:0.9rem; border-radius:25px; font-weight:600; 
-             transition:all 0.3s ease; text-decoration:none;"
-      onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 5px 15px rgba(255,214,107,0.4)';"
-      onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-      Get Started
-    </a>
-  </header>
+  <!-- Sidebar -->
+  <% layout('layouts/main') %>
 
   <!-- Upload Section -->
   <section style="display:flex; justify-content:center; align-items:center; height:60vh;flex-direction:column;text-align:center;">
     <h2 style="font-size:2rem;margin-bottom:1rem;">Upload Dataset Anda</h2>
     <p style="color:#F8FAFC;margin-bottom:2rem;">Silakan upload file <b>CSV</b> untuk diproses</p>
     
-    <form action="/upload" method="POST" enctype="multipart/form-data" style="background:#365486; padding:2rem 3rem; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.08); text-align:center;">
+    <form action="/upload" method="POST" enctype="multipart/form-data" style="background:#263159; padding:2rem 3rem; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.08); text-align:center;">
       <input type="file" name="csvFile" accept=".csv" 
         style="display:block;margin:0 auto 1.5rem auto; border:2px dashed #DCF2F1; padding:1rem; border-radius:15px; background:#365486; cursor:pointer; transition:all 0.3s ease;" 
         onmouseover="this.style.background='#DCF2F1';" 
