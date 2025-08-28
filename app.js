@@ -101,7 +101,16 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.get("/homepage", (req, res) => {
+function isAuth(req, res, next) {
+  if (req.session.isAuth) {
+    next();
+  } else {
+    req.flash("error", "Silakan login terlebih dahulu.");
+    res.redirect("/login");
+  }
+}
+
+app.get("/homepage", isAuth, (req, res) => {
   res.render("homepage", {
     title: "Vulnera | Homepage",
     messages: req.flash()
@@ -135,6 +144,18 @@ app.post("/login", async (req, res) => {
     return res.redirect("/login");
   }
 });
+
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+      return res.redirect("/homepage");
+    }
+    res.clearCookie("connect.sid"); // hapus cookie session
+    res.redirect("/"); // arahkan ke landing page
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
