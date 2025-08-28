@@ -18,7 +18,7 @@
   <!-- Sambutan + Button -->
   <div style="display:flex; align-items:center; gap:15px;">
     <div style="font-size:1rem; padding:0.5rem 1.2rem;">
-      Halo, <span style="font-weight:600; color:#FFD66B;"><%= username %></span>
+      Halo, <span style="font-weight:600; color:#FFD66B;"><%= user ? user.name : 'User' %></span>
     </div>
 
     <a href="/" 
