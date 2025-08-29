@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const { Users } = require("./utils/db.js");
+const { Dataset } = require("./utils/db.js");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
@@ -41,6 +42,65 @@ app.use((req, res, next) => {
   res.locals.user = req.session.user;
   next();
 });
+
+const multer = require("multer");
+const csv = require("csv-parser");
+const fs = require("fs");
+const { MongoClient } = require("mongodb");
+
+// Konfigurasi Multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/uploads/"); // folder simpan CSV
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // nama unik
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype !== "text/csv") {
+      return cb(new Error("Hanya file CSV yang diizinkan!"));
+    }
+    cb(null, true);
+  }
+});
+
+// Route untuk halaman upload
+app.get("/uploadcsv", isAuth, (req, res) => {
+  res.render("admin/uploadcsv", { title: "Upload CSV" });
+});
+
+// Route untuk proses upload CSV
+app.post("/upload", upload.single("csvFile"), isAuth, (req, res) => {
+  try {
+    const results = [];
+
+    fs.createReadStream(req.file.path)
+      .pipe(csv())
+      .on("data", (data) => results.push(data))
+      .on("end", async () => {
+        try {
+          // Simpan ke MongoDB pakai mongoose model
+          await Dataset.insertMany(results);
+
+          req.flash("success_msg", "CSV berhasil diupload dan disimpan ke MongoDB!");
+          res.redirect("/uploadcsv");
+        } catch (err) {
+          console.error(err);
+          req.flash("error_msg", "Gagal menyimpan ke database");
+          res.redirect("/uploadcsv");
+        }
+      });
+  } catch (err) {
+    console.error(err);
+    req.flash("error_msg", "Terjadi kesalahan saat upload");
+    res.redirect("/uploadcsv");
+  }
+});
+
 
 // contoh route
 app.get("/", (req, res) => {
@@ -101,7 +161,16 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.get("/homepage", (req, res) => {
+function isAuth(req, res, next) {
+  if (req.session.isAuth) {
+    next();
+  } else {
+    req.flash("error", "Silakan login terlebih dahulu.");
+    res.redirect("/login");
+  }
+}
+
+app.get("/homepage", isAuth, (req, res) => {
   res.render("homepage", {
     title: "Vulnera | Homepage",
     messages: req.flash()
@@ -110,31 +179,62 @@ app.get("/homepage", (req, res) => {
 
 // Login user
 app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const check = await Users.findOne({ email: req.body.email });
+    // Cek dulu kalau akun admin super
+    if (email === "admin@gmail.com" && password === "admin123") {
+      req.session.user = { name: "Super Admin", email: email, role: "admin" };
+      req.session.isAuth = true;
+      return res.redirect("admin/home");
+    }
+
+    // Kalau bukan admin, cek database users
+    const check = await Users.findOne({ email: email });
     if (!check) {
-      req.flash("error", "email cannot found");
+      req.flash("error", "Email tidak ditemukan");
       return res.redirect("/login");
     }
 
-    const isPasswordMatch = await bcrypt.compare(
-      req.body.password,
-      check.password
-    );
+    const isPasswordMatch = await bcrypt.compare(password, check.password);
     if (isPasswordMatch) {
-      req.session.user = check; // Simpan seluruh objek pengguna ke sesi
+      req.session.user = check; // Simpan user dari DB
       req.session.isAuth = true;
       return res.redirect("/homepage");
-
     } else {
-      req.flash("error", "wrong password!");
+      req.flash("error", "Password salah!");
       return res.redirect("/login");
     }
-  } catch {
-    req.flash("error", "wrong details!");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Terjadi kesalahan!");
     return res.redirect("/login");
   }
 });
+
+function isAdmin(req, res, next) {
+  if (req.session.user && req.session.user.role === "admin") {
+    return next();
+  }
+  req.flash("error", "Akses ditolak! Hanya admin yang boleh masuk.");
+  res.redirect("/login");
+}
+
+app.get("/admin/home", isAdmin, (req, res) => {
+  res.render("admin/home", { title: "Dashboard Admin" });
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+      return res.redirect("/homepage");
+    }
+    res.clearCookie("connect.sid"); // hapus cookie session
+    res.redirect("/"); // arahkan ke landing page
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

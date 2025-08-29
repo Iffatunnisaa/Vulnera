@@ -30,6 +30,10 @@ const LoginSchema = new mongoose.Schema({
     }
 });
 
+// Schema fleksibel untuk dataset CSV
+const DatasetSchema = new mongoose.Schema({}, { strict: false });
+const Dataset = mongoose.model("datasets", DatasetSchema);
+
 const Users = new mongoose.model("users", LoginSchema);
 
-module.exports = { Users };
+module.exports = { Users, Dataset };

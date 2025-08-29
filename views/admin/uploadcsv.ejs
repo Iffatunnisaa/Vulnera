@@ -26,19 +26,37 @@
     <h2 style="font-size:2rem;margin-bottom:1rem;">Upload Dataset Anda</h2>
     <p style="color:#F8FAFC;margin-bottom:2rem;">Silakan upload file <b>CSV</b> untuk diproses</p>
     
-    <form action="/upload" method="POST" enctype="multipart/form-data" style="background:#263159; padding:2rem 3rem; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.08); text-align:center;">
-      <input type="file" name="csvFile" accept=".csv" 
-        style="display:block;margin:0 auto 1.5rem auto; border:2px dashed #DCF2F1; padding:1rem; border-radius:15px; background:#365486; cursor:pointer; transition:all 0.3s ease;" 
-        onmouseover="this.style.background='#DCF2F1';" 
-        onmouseout="this.style.background='#7FC7D9';">
-      
-      <button type="submit" 
-        style="background:linear-gradient(to right,#FFD66B,#FFE7A0); border:none; color:#263159; padding:0.7rem 2rem; border-radius:25px; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.3s ease;" 
-        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(255,214,107,0.4)';"
-        onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-        Upload
-      </button>
-    </form>
+    <form action="/upload" method="POST" enctype="multipart/form-data" 
+      style="background:#263159; padding:2rem 3rem; border-radius:20px; box-shadow:0 8px 25px rgba(0,0,0,0.08); text-align:center;">
+  <input id="file-input" type="file" name="csvFile" accept=".csv"
+    style="display:block;margin:0 auto 1.5rem auto; border:2px dashed #DCF2F1; padding:1rem; border-radius:15px; background:#365486; cursor:pointer; transition:all 0.3s ease;" 
+    onmouseover="this.style.background='#DCF2F1';" 
+    onmouseout="this.style.background='#7FC7D9';"
+    onchange="showFileName()">
+    
+  <p id="file-name" style="margin-bottom:1rem; font-size:0.9rem; color:#FFD66B;"></p>
+
+  <button type="submit" 
+    style="background:linear-gradient(to right,#FFD66B,#FFE7A0); border:none; color:#263159; padding:0.7rem 2rem; border-radius:25px; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.3s ease;" 
+    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(255,214,107,0.4)';"
+    onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+    Upload
+  </button>
+</form>
+
+<!-- Pesan Flash -->
+<% if (success_msg && success_msg.length > 0) { %>
+  <div style="background:green; color:white; padding:10px; margin:10px; border-radius:5px;">
+    <%= success_msg %>
+  </div>
+<% } %>
+
+<% if (error_msg && error_msg.length > 0) { %>
+  <div style="background:red; color:white; padding:10px; margin:10px; border-radius:5px;">
+    <%= error_msg %>
+  </div>
+<% } %>
+
   </section>
 
   <script>

