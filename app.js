@@ -69,12 +69,12 @@ const upload = multer({
 });
 
 // Route untuk halaman upload
-app.get("/uploadcsv", (req, res) => {
+app.get("/uploadcsv", isAuth, (req, res) => {
   res.render("admin/uploadcsv", { title: "Upload CSV" });
 });
 
 // Route untuk proses upload CSV
-app.post("/upload", upload.single("csvFile"), (req, res) => {
+app.post("/upload", upload.single("csvFile"), isAuth, (req, res) => {
   try {
     const results = [];
 
@@ -179,30 +179,49 @@ app.get("/homepage", isAuth, (req, res) => {
 
 // Login user
 app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const check = await Users.findOne({ email: req.body.email });
+    // Cek dulu kalau akun admin super
+    if (email === "admin@gmail.com" && password === "admin123") {
+      req.session.user = { name: "Super Admin", email: email, role: "admin" };
+      req.session.isAuth = true;
+      return res.redirect("admin/home");
+    }
+
+    // Kalau bukan admin, cek database users
+    const check = await Users.findOne({ email: email });
     if (!check) {
-      req.flash("error", "email cannot found");
+      req.flash("error", "Email tidak ditemukan");
       return res.redirect("/login");
     }
 
-    const isPasswordMatch = await bcrypt.compare(
-      req.body.password,
-      check.password
-    );
+    const isPasswordMatch = await bcrypt.compare(password, check.password);
     if (isPasswordMatch) {
-      req.session.user = check; // Simpan seluruh objek pengguna ke sesi
+      req.session.user = check; // Simpan user dari DB
       req.session.isAuth = true;
       return res.redirect("/homepage");
-
     } else {
-      req.flash("error", "wrong password!");
+      req.flash("error", "Password salah!");
       return res.redirect("/login");
     }
-  } catch {
-    req.flash("error", "wrong details!");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Terjadi kesalahan!");
     return res.redirect("/login");
   }
+});
+
+function isAdmin(req, res, next) {
+  if (req.session.user && req.session.user.role === "admin") {
+    return next();
+  }
+  req.flash("error", "Akses ditolak! Hanya admin yang boleh masuk.");
+  res.redirect("/login");
+}
+
+app.get("/admin/home", isAdmin, (req, res) => {
+  res.render("admin/home", { title: "Dashboard Admin" });
 });
 
 app.get("/logout", (req, res) => {
