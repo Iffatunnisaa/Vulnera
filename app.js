@@ -224,6 +224,56 @@ app.get("/admin/home", isAdmin, (req, res) => {
   res.render("admin/home", { title: "Dashboard Admin" });
 });
 
+app.get("/api/dashboard-data", async (req, res) => {
+  try {
+    const allData = await Dataset.find({});
+
+    // --- Olah data ---
+    // Total Request
+    const totalRequest = allData.length;
+
+    // Hitung total serangan (anggap "400, 404, 500" = serangan)
+    const attackCodes = ["400", "404", "500"];
+    const totalAttack = allData.filter(d => attackCodes.includes(String(d.http?.response?.code))).length;
+
+    // Persentase serangan
+    const attackPercentage = totalRequest > 0 ? ((totalAttack / totalRequest) * 100).toFixed(2) : 0;
+
+    // Distribusi HTTP Methods
+    const methodCount = {};
+    allData.forEach(d => {
+      const method = d["http.request.method"];
+      if (method) methodCount[method] = (methodCount[method] || 0) + 1;
+    });
+
+    // Distribusi status code
+    const statusCount = {};
+    allData.forEach(d => {
+      const code = String(d["http.response.code"]);
+      if (code) statusCount[code] = (statusCount[code] || 0) + 1;
+    });
+
+    // Distribusi src_port
+    const srcPortCount = {};
+    allData.forEach(d => {
+      const port = d["tcp.srcport"];
+      if (port) srcPortCount[port] = (srcPortCount[port] || 0) + 1;
+    });
+
+    // --- Kirim hasil ---
+    res.json({
+      totalRequest,
+      totalAttack,
+      attackPercentage,
+      methodCount,
+      statusCount,
+      srcPortCount
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {

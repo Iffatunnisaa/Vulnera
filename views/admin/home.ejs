@@ -11,14 +11,14 @@
   <!-- Sidebar -->
   <aside class="w-64 p-5" style="background-color: #263159;">
     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-      <img src="/public/img/logo.png" alt="Logo" style="width: 35px; height: 43px;">
+      <img src="../img/logo.png" alt="Logo" style="width: 35px; height: 43px;">
       <h1 class="text-3xl font-bold" style="background:linear-gradient(45deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent; margin: 0;">Vulnera</h1>
     </div>
 
     <ul class="space-y-4">
-      <li><a href="#" class="block hover:text-blue-400">📊 Dashboard</a></li>
-      <li><a href="#" class="block hover:text-blue-400">📝 Upload File</a></li>
-      <li><a href="#" class="block text-red-400">Keluar</a></li>
+      <li><a href="/admin/home" class="block hover:text-blue-400">📊 Dashboard</a></li>
+      <li><a href="/uploadcsv" class="block hover:text-blue-400">📝 Upload File</a></li>
+      <li><a href="/logout" class="block text-red-400">Keluar</a></li>
     </ul>
   </aside>
 
@@ -35,15 +35,15 @@
       <h3 class="text-lg font-bold mb-4">Ringkasan Status Keamanan Web Server</h3>
       <div class="grid grid-cols-3 gap-4">
         <div class="p-4 rounded-lg shadow text-center" style="background-color: #263159;">
-          <p class="text-3xl font-bold text-red-400">250</p>
+          <p id="totalAttack" class="text-3xl font-bold text-red-400">250</p>
           <span class="text-sm">Total Serangan (24h)</span>
         </div>
         <div class="p-4 rounded-lg shadow text-center" style="background-color: #263159;">
-          <p class="text-3xl font-bold text-green-400">1000</p>
+          <p id="totalRequest" class="text-3xl font-bold text-green-400">1000</p>
           <span class="text-sm">Total Request</span>
         </div>
         <div class="p-4 rounded-lg shadow text-center" style="background-color: #263159;">
-          <p class="text-3xl font-bold text-yellow-400">25%</p>
+          <p id="attackPercentage" class="text-3xl font-bold text-yellow-400">25%</p>
           <span class="text-sm">Persentase Serangan</span>
         </div>
       </div>
@@ -84,95 +84,54 @@
 
   <!-- ChartJS Script -->
   <script>
-    // Pie Chart Normal vs Attack
-    new Chart(document.getElementById('trafficPie'), {
-      type: 'pie',
-      data: {
-        labels: ['Normal', 'Serangan'],
-        datasets: [{
-          data: [750, 250],
-          backgroundColor: ['#34D399', '#F87171']
-        }]
-      }
-    });
+async function loadDashboard() {
+  const res = await fetch("/api/dashboard-data");
+  const data = await res.json();
 
-    // Bar Chart src_port
-    new Chart(document.getElementById('srcPortChart'), {
-      type: 'bar',
-      data: {
-        labels: ['22', '80', '443', '8080', '3306'],
-        datasets: [{
-          label: 'Jumlah Serangan',
-          data: [120, 80, 50, 30, 20],
-          backgroundColor: '#60A5FA'
-        }]
-      }
-    });
+  // Update angka ringkasan
+  document.getElementById("totalAttack").innerText = data.totalAttack;
+  document.getElementById("totalRequest").innerText = data.totalRequest;
+  document.getElementById("attackPercentage").innerText = data.attackPercentage + "%";
 
-    // HTTP Method Chart
-    new Chart(document.getElementById('httpMethodChart'), {
-      type: 'bar',
-      data: {
-        labels: ['GET', 'POST', 'PUT', 'DELETE'],
-        datasets: [{
-          label: 'Jumlah Request',
-          data: [700, 250, 30, 20],
-          backgroundColor: '#FBBF24'
-        }]
-      }
-    });
+  // Traffic Pie
+  new Chart(document.getElementById('trafficPie'), {
+    type: 'pie',
+    data: {
+      labels: ['Normal', 'Serangan'],
+      datasets: [{
+        data: [data.totalRequest - data.totalAttack, data.totalAttack],
+        backgroundColor: ['#34D399', '#F87171']
+      }]
+    }
+  });
 
-    // HTTP Status Chart
-    new Chart(document.getElementById('httpStatusChart'), {
-      type: 'bar',
-      data: {
-        labels: ['200', '400', '404', '500'],
-        datasets: [{
-          label: 'Jumlah',
-          data: [600, 100, 200, 100],
-          backgroundColor: ['#34D399','#F87171','#FBBF24','#60A5FA']
-        }]
-      }
-    });
+  // HTTP Method Chart
+  new Chart(document.getElementById('httpMethodChart'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(data.methodCount),
+      datasets: [{
+        label: 'Jumlah Request',
+        data: Object.values(data.methodCount),
+        backgroundColor: '#FBBF24'
+      }]
+    }
+  });
 
-    // Prediction Pie
-    new Chart(document.getElementById('predictionPie'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Normal', 'Serangan'],
-        datasets: [{
-          data: [750, 250],
-          backgroundColor: ['#34D399','#F87171']
-        }]
-      }
-    });
-
-    // Attack Type Chart
-    new Chart(document.getElementById('attackTypeChart'), {
-      type: 'bar',
-      data: {
-        labels: ['DoS', 'Phishing', 'SQL Injection', 'XSS'],
-        datasets: [{
-          label: 'Jumlah',
-          data: [100, 60, 50, 40],
-          backgroundColor: '#E879F9'
-        }]
-      }
-    });
-
-    // Request Trend Line
-    new Chart(document.getElementById('requestTrendChart'), {
-      type: 'line',
-      data: {
-        labels: ["00:00","01:00","02:00","03:00","04:00"],
-        datasets: [{
-          label: 'Jumlah Request',
-          data: [50, 70, 65, 80, 90],
-          borderColor: '#4F46E5',
-          fill: false
-        }]
-      }
-    });
-  </script>
+  // Status Code Chart
+  new Chart(document.getElementById('httpStatusChart'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(data.statusCount),
+      datasets: [{
+        label: 'Jumlah',
+        data: Object.values(data.statusCount),
+        backgroundColor: ['#34D399','#F87171','#FBBF24','#60A5FA']
+      }]
+    }
+  });
+}
+loadDashboard();
+</script>
 </body>
 </html>
