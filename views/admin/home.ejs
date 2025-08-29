@@ -8,8 +8,19 @@
 </head>
 <body class="text-white flex" style="background-color:#0F1035;">
 
-<!-- Sidebar -->
- <%- include('partials/sidebar') %>
+  <!-- Sidebar -->
+  <aside class="w-64 p-5" style="background-color: #263159;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="/public/img/logo.png" alt="Logo" style="width: 35px; height: 43px;">
+      <h1 class="text-3xl font-bold" style="background:linear-gradient(45deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent; margin: 0;">Vulnera</h1>
+    </div>
+
+    <ul class="space-y-4">
+      <li><a href="#" class="block hover:text-blue-400">📊 Dashboard</a></li>
+      <li><a href="#" class="block hover:text-blue-400">📝 Upload File</a></li>
+      <li><a href="#" class="block text-red-400">Keluar</a></li>
+    </ul>
+  </aside>
 
   <!-- Main Content -->
   <main class="flex-1 p-6 space-y-6">

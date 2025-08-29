@@ -25,16 +25,18 @@
       </div>
 
       <div class="form-wrapper">
-        <% if (messages.error && messages.error.length> 0) { %>
-          <div class="flash-message" style="background-color:#FF8989;">
-            <%= messages.error[0] %>
-          </div>
+        <!-- Flash Messages -->
+          <% if (messages.error && messages.error.length > 0) { %>
+            <div style="background:#FF8989; color:#fff; padding:0.75rem 1rem; border-radius:0.5rem; font-size:0.875rem; margin-bottom:1rem; text-align:center;">
+              <%= messages.error[0] %>
+            </div>
           <% } %>
-            <% if (messages.success && messages.success.length> 0) { %>
-              <div class="flash-message success" style="background-color:#9FFF9B;">
-                <%= messages.success[0] %>
-              </div>
-              <% } %>
+
+          <% if (messages.success && messages.success.length > 0) { %>
+            <div style="background:#4CAF50; color:#fff; padding:0.75rem 1rem; border-radius:0.5rem; font-size:0.875rem; margin-bottom:1rem; text-align:center;">
+              <%= messages.success[0] %>
+            </div>
+          <% } %>
                 <!-- Form -->
                 <form action="/register" method="post" style="display:flex; flex-direction:column;">
 
