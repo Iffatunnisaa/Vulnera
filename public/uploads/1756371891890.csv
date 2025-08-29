@@ -1,0 +1,31 @@
+frame.time,ip.src,tcp.srcport,ip.dst,tcp.dstport,http.request.method,http.request.uri,http.request.version,http.user_agent,http.host,http.response.version,http.response.code,http.response.phrase,http.content_length
+2025-08-25 01:50:32,192.168.1.167,1440,10.0.0.250,8080,PUT,/login,HTTP/2,Edge/110.0,vulnera.io,HTTP/1.1,400,Bad Request,724
+2025-08-25 02:04:23,192.168.1.244,3750,10.0.0.181,8080,POST,/form/input,HTTP/2,Chrome/118.0,testsite.com,HTTP/1.1,400,Bad Request,392
+2025-08-25 02:52:02,192.168.1.89,54917,10.0.0.59,8080,DELETE,/login,HTTP/1.1,Mozilla/5.0,testsite.com,HTTP/2,400,Bad Request,3833
+2025-08-25 01:45:51,192.168.1.16,25453,10.0.0.17,443,POST,/api/data,HTTP/2,Chrome/118.0,vulnera.io,HTTP/1.1,200,OK,1890
+2025-08-25 01:58:55,192.168.1.53,23136,10.0.0.184,80,GET,/login,HTTP/2,Chrome/118.0,vulnera.io,HTTP/1.1,400,Bad Request,3413
+2025-08-25 01:47:52,192.168.1.51,51551,10.0.0.4,443,POST,/dashboard,HTTP/2,Chrome/118.0,testsite.com,HTTP/2,403,Forbidden,2098
+2025-08-25 02:09:04,192.168.1.110,62149,10.0.0.58,80,PUT,/api/data,HTTP/2,Edge/110.0,example.com,HTTP/2,500,Internal Server Error,2599
+2025-08-25 02:22:53,192.168.1.24,51575,10.0.0.249,80,GET,/dashboard,HTTP/2,Chrome/118.0,testsite.com,HTTP/1.1,401,Unauthorized,1914
+2025-08-25 02:30:17,192.168.1.17,31265,10.0.0.2,443,DELETE,/form/input,HTTP/2,Edge/110.0,vulnera.io,HTTP/2,500,Internal Server Error,2119
+2025-08-25 02:36:08,192.168.1.127,6548,10.0.0.178,8080,DELETE,/api/data,HTTP/2,Safari/16.0,testsite.com,HTTP/2,404,Not Found,1467
+2025-08-25 02:39:56,192.168.1.133,4366,10.0.0.147,80,GET,/form/input,HTTP/2,Chrome/118.0,example.com,HTTP/1.1,404,Not Found,2657
+2025-08-25 02:33:10,192.168.1.26,23866,10.0.0.88,443,DELETE,/login,HTTP/2,Safari/16.0,vulnera.io,HTTP/2,404,Not Found,4286
+2025-08-25 02:06:34,192.168.1.60,4538,10.0.0.94,80,POST,/logout,HTTP/2,Chrome/118.0,testsite.com,HTTP/2,400,Bad Request,3917
+2025-08-25 02:32:50,192.168.1.250,60547,10.0.0.3,80,POST,/login,HTTP/2,Chrome/118.0,example.com,HTTP/2,403,Forbidden,1028
+2025-08-25 02:42:11,192.168.1.30,25003,10.0.0.68,8080,PUT,/form/input,HTTP/2,Chrome/118.0,vulnera.io,HTTP/1.1,404,Not Found,3866
+2025-08-25 02:42:08,192.168.1.241,36882,10.0.0.80,8080,GET,/login,HTTP/2,Safari/16.0,testsite.com,HTTP/1.1,200,OK,2445
+2025-08-25 02:33:43,192.168.1.245,18072,10.0.0.50,8080,DELETE,/dashboard,HTTP/1.1,Chrome/118.0,vulnera.io,HTTP/2,401,Unauthorized,605
+2025-08-25 02:57:10,192.168.1.114,46632,10.0.0.162,80,GET,/form/input,HTTP/2,Mozilla/5.0,example.com,HTTP/2,403,Forbidden,4005
+2025-08-25 01:48:02,192.168.1.133,65518,10.0.0.204,80,PUT,/login,HTTP/2,Safari/16.0,vulnera.io,HTTP/1.1,404,Not Found,564
+2025-08-25 02:41:57,192.168.1.201,62986,10.0.0.156,80,POST,/api/data,HTTP/2,Mozilla/5.0,example.com,HTTP/1.1,404,Not Found,4544
+2025-08-25 02:29:22,192.168.1.144,3491,10.0.0.88,8080,POST,/api/data,HTTP/2,Edge/110.0,example.com,HTTP/2,500,Internal Server Error,3187
+2025-08-25 02:54:09,192.168.1.16,4221,10.0.0.144,443,POST,/login,HTTP/1.1,Chrome/118.0,example.com,HTTP/2,403,Forbidden,1683
+2025-08-25 02:05:19,192.168.1.25,32821,10.0.0.213,443,DELETE,/form/input,HTTP/2,Safari/16.0,example.com,HTTP/1.1,500,Internal Server Error,3457
+2025-08-25 02:13:04,192.168.1.231,39844,10.0.0.18,80,DELETE,/login,HTTP/1.1,Edge/110.0,vulnera.io,HTTP/2,200,OK,3128
+2025-08-25 02:02:03,192.168.1.92,53745,10.0.0.161,8080,GET,/api/data,HTTP/2,Chrome/118.0,testsite.com,HTTP/2,400,Bad Request,4864
+2025-08-25 02:07:26,192.168.1.85,16718,10.0.0.90,8080,GET,/logout,HTTP/1.1,Mozilla/5.0,vulnera.io,HTTP/1.1,401,Unauthorized,920
+2025-08-25 02:39:42,192.168.1.75,21604,10.0.0.146,8080,DELETE,/api/data,HTTP/2,Mozilla/5.0,example.com,HTTP/1.1,404,Not Found,3322
+2025-08-25 01:49:39,192.168.1.23,44928,10.0.0.159,80,GET,/dashboard,HTTP/1.1,Chrome/118.0,testsite.com,HTTP/1.1,500,Internal Server Error,678
+2025-08-25 01:49:06,192.168.1.97,8773,10.0.0.215,80,POST,/logout,HTTP/1.1,Mozilla/5.0,example.com,HTTP/2,301,Moved Permanently,3693
+2025-08-25 02:19:22,192.168.1.253,15590,10.0.0.117,80,DELETE,/login,HTTP/1.1,Edge/110.0,vulnera.io,HTTP/2,401,Unauthorized,2169

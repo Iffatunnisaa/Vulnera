@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const { Users } = require("./utils/db.js");
+const { Dataset } = require("./utils/db.js");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
@@ -41,6 +42,65 @@ app.use((req, res, next) => {
   res.locals.user = req.session.user;
   next();
 });
+
+const multer = require("multer");
+const csv = require("csv-parser");
+const fs = require("fs");
+const { MongoClient } = require("mongodb");
+
+// Konfigurasi Multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/uploads/"); // folder simpan CSV
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // nama unik
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype !== "text/csv") {
+      return cb(new Error("Hanya file CSV yang diizinkan!"));
+    }
+    cb(null, true);
+  }
+});
+
+// Route untuk halaman upload
+app.get("/uploadcsv", (req, res) => {
+  res.render("admin/uploadcsv", { title: "Upload CSV" });
+});
+
+// Route untuk proses upload CSV
+app.post("/upload", upload.single("csvFile"), (req, res) => {
+  try {
+    const results = [];
+
+    fs.createReadStream(req.file.path)
+      .pipe(csv())
+      .on("data", (data) => results.push(data))
+      .on("end", async () => {
+        try {
+          // Simpan ke MongoDB pakai mongoose model
+          await Dataset.insertMany(results);
+
+          req.flash("success_msg", "CSV berhasil diupload dan disimpan ke MongoDB!");
+          res.redirect("/uploadcsv");
+        } catch (err) {
+          console.error(err);
+          req.flash("error_msg", "Gagal menyimpan ke database");
+          res.redirect("/uploadcsv");
+        }
+      });
+  } catch (err) {
+    console.error(err);
+    req.flash("error_msg", "Terjadi kesalahan saat upload");
+    res.redirect("/uploadcsv");
+  }
+});
+
 
 // contoh route
 app.get("/", (req, res) => {
