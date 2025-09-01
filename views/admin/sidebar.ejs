@@ -1,13 +1,40 @@
-<!-- Sidebar -->
-<aside class="w-64 p-5" style="background-color: #263159;">
-  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-    <img src="/public/img/logo.png" alt="Logo" style="width: 35px; height: 43px;">
-    <h1 class="text-3xl font-bold" style="background:linear-gradient(45deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent; margin: 0;">Vulnera</h1>
+<aside class="fixed top-0 left-0 flex flex-col w-64 h-screen px-4 py-6 bg-[#263159] text-gray-200" style="background-color: #263159;">
+  
+  <div class="flex items-center gap-3 px-2 mb-8">
+    <img src="../img/logo.png" alt="Logo" class="w-9 h-auto">
+    <h1 class="text-3xl font-bold" style="background:linear-gradient(45deg,#FFD66B,#FFFBEB); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent;">
+      Vulnera
+    </h1>
   </div>
 
-  <ul class="space-y-4">
-    <li><a href="#" class="block hover:text-blue-400">📊 Dashboard</a></li>
-    <li><a href="#" class="block hover:text-blue-400">📝 Upload File</a></li>
-    <li><a href="#" class="block text-red-400">Keluar</a></li>
-  </ul>
+  <nav class="flex-grow">
+    <ul class="space-y-2">
+      <li>
+        <a href="/admin/home" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-700 text-white font-medium transition-colors duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 1.5m1-1.5l-1-1.5m-1 1.5H6.625m7.5 0h3.75m-3.75 0l1-1.5m-1 1.5l1 1.5" />
+          </svg>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="/uploadcsv" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-700 hover:text-white transition-colors duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l-3 3m3-3l3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+          </svg>
+          <span>Upload File</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <div>
+    <a href="/logout" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-900/50 hover:text-red-300 transition-colors duration-200">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+      </svg>
+      <span>Keluar</span>
+    </a>
+  </div>
+
 </aside>

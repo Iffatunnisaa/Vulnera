@@ -1,0 +1,5 @@
+/public/uploads
+/node_modules
+/ml-service/model
+views/admin/home copy.ejs
+views/admin/uploadcsv copy.ejs
