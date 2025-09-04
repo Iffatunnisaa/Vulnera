@@ -53,7 +53,7 @@
     <div class="grid grid-cols-3 gap-6">
       <div class="p-5 rounded-lg shadow" style="background-color: #263159;">
         <h3 class="mb-3 font-semibold">Distribusi Normal vs Serangan</h3>
-        <canvas id="trafficPie"></canvas>
+        <canvas id="distribusiPie"></canvas>
       </div>
       <div class="p-5 rounded-lg shadow" style="background-color: #263159;">
         <h3 class="mb-3 font-semibold">Distribusi Port Sumber (src_port)</h3>
@@ -94,7 +94,7 @@ async function loadDashboard() {
   document.getElementById("attackPercentage").innerText = data.attackPercentage + "%";
 
   // Traffic Pie
-  new Chart(document.getElementById('trafficPie'), {
+  new Chart(document.getElementById('distribusiPie'), {
     type: 'pie',
     data: {
       labels: ['Normal', 'Serangan'],

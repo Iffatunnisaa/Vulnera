@@ -233,7 +233,7 @@ app.get("/api/dashboard-data", async (req, res) => {
     const totalRequest = allData.length;
 
     // Hitung total serangan (anggap "400, 404, 500" = serangan)
-    const attackCodes = ["400", "404", "500"];
+    const attackCodes = ["200", "301", "302", "404"];
     const totalAttack = allData.filter(d => attackCodes.includes(String(d.http?.response?.code))).length;
 
     // Persentase serangan
