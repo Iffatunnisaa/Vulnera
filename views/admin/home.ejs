@@ -39,18 +39,79 @@
     background-color: #263159;
     }
   </style>
+  <style>
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      color: #DCF2F1;
+    }
+    .error-message {
+      background: linear-gradient(to right, #f44336, #d32f2f);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .success-message {
+      background: linear-gradient(to right, #4CAF50, #45a049);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      text-align: center;
+    }
+
+    .bg-button-refresh {
+    background-color: #263159;
+    }
+  </style>
 </head>
 <body class="text-white flex" style="background-color:#0F1035;">
 
   <!-- Sidebar -->
   <aside class="fixed top-0 left-0 ...">
     <%- include('sidebar') %>
+  <aside class="fixed top-0 left-0 ...">
+    <%- include('sidebar') %>
   </aside>
 
   <!-- Main Content -->
   <main class="ml-64 p-8 flex-1 p-6 space-y-6">
+  <main class="ml-64 p-8 flex-1 p-6 space-y-6">
     <!-- Top Bar -->
     <div class="flex justify-between items-center">
+      <h2 class="text-2xl font-bold text-yellow-400">🚀 Vulnera Admin Dashboard</h2>
+      <div class="flex items-center space-x-4">
+        <button id="refreshBtn" class="px-4 py-2 bg-button-refresh hover:bg-blue-700 rounded-lg transition-colors">
+          🔄 Refresh Data
+        </button>
+        <span id="lastUpdate" class="text-sm text-gray-400"></span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+        <p>Memuat data dashboard...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="error-message" style="display: none;">
+      <h3>❌ Error Memuat Data</h3>
+      <p id="errorMessage"></p>
+      <button onclick="loadDashboard()" class="mt-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg">
+        Coba Lagi
+      </button>
       <h2 class="text-2xl font-bold text-yellow-400">🚀 Vulnera Admin Dashboard</h2>
       <div class="flex items-center space-x-4">
         <button id="refreshBtn" class="px-4 py-2 bg-button-refresh hover:bg-blue-700 rounded-lg transition-colors">
@@ -103,7 +164,43 @@
             <p id="mlProcessed" class="text-3xl font-bold text-blue-400">0</p>
             <span class="text-sm text-gray-300">Diproses ML</span>
           </div>
+    <!-- Dashboard Content -->
+    <div id="dashboardContent" style="display: none;">
+      <!-- Ringkasan Status Keamanan -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-yellow-400">📊 Ringkasan Status Keamanan Web Server</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform" style="background: linear-gradient(135deg, #263159, #365486);">
+            <div class="text-4xl mb-2">🛡️</div>
+            <p id="totalRequest" class="text-3xl font-bold text-green-400">0</p>
+            <span class="text-sm text-gray-300">Total Request</span>
+          </div>
+          <div class="p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform" style="background: linear-gradient(135deg, #263159, #365486);">
+            <div class="text-4xl mb-2">⚔️</div>
+            <p id="totalAttack" class="text-3xl font-bold text-red-400">0</p>
+            <span class="text-sm text-gray-300">Total Serangan</span>
+          </div>
+          <div class="p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform" style="background: linear-gradient(135deg, #263159, #365486);">
+            <div class="text-4xl mb-2">📈</div>
+            <p id="attackPercentage" class="text-3xl font-bold text-yellow-400">0%</p>
+            <span class="text-sm text-gray-300">Persentase Serangan</span>
+          </div>
+          <div class="p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform" style="background: linear-gradient(135deg, #263159, #365486);">
+            <div class="text-4xl mb-2">🤖</div>
+            <p id="mlProcessed" class="text-3xl font-bold text-blue-400">0</p>
+            <span class="text-sm text-gray-300">Diproses ML</span>
+          </div>
         </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <!-- Traffic Distribution Pie Chart -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🔄 Distribusi Traffic (Normal vs Serangan)</h3>
+          <div class="chart-container">
+            <canvas id="trafficPie"></canvas>
+          </div>
       </div>
 
       <!-- Charts Grid -->
@@ -121,6 +218,21 @@
           <h3 class="mb-4 font-semibold text-yellow-400">🤖 Distribusi Prediksi ML</h3>
           <div class="chart-container">
             <canvas id="predictionPie"></canvas>
+          </div>
+
+        <!-- ML Prediction Distribution -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🤖 Distribusi Prediksi ML</h3>
+          <div class="chart-container">
+            <canvas id="predictionPie"></canvas>
+          </div>
+        </div>
+
+        <!-- HTTP Methods Chart -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🌐 HTTP Methods</h3>
+          <div class="chart-container">
+            <canvas id="httpMethodChart"></canvas>
           </div>
         </div>
 
@@ -155,7 +267,48 @@
             <canvas id="attackTypeChart"></canvas>
           </div>
         </div>
+        <!-- HTTP Status Codes -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">📊 HTTP Status Codes</h3>
+          <div class="chart-container">
+            <canvas id="httpStatusChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Source Port Distribution -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🔌 Source Port Distribution</h3>
+          <div class="chart-container">
+            <canvas id="srcPortChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Attack Types Breakdown -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🎯 Jenis Serangan Detail</h3>
+          <div class="chart-container">
+            <canvas id="attackTypeChart"></canvas>
+          </div>
+        </div>
       </div>
+
+      <!-- Large Charts -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
+        <!-- Request Trend Chart -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">📈 Tren Request Masuk</h3>
+          <div class="chart-container">
+            <canvas id="requestTrendChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Top IP Addresses -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🌍 Top IP Addresses</h3>
+          <div class="chart-container">
+            <canvas id="ipAddressChart"></canvas>
+          </div>
+        </div>
 
       <!-- Large Charts -->
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
@@ -204,6 +357,8 @@
   </main>
 
   <!-- ChartJS Script -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/dashboard.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="/js/dashboard.js"></script>
 </body>
