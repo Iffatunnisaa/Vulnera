@@ -1,14 +1,22 @@
 const { required } = require("joi");
-const mongoose = require("mongoose");
-const connect = mongoose.connect("mongodb://localhost:27017/vulnera")
 
-// check database connected or not
-connect.then(() => {
-    console.log("Database connected successfully!");
-})
-    .catch(() => {
-        console.log("Database cannot be connected!");
-    })
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+async function connectToDatabase() {
+    try {
+        await mongoose.connect(process.env.MONGODB_URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("Database connected successfully!");
+    } catch (error) {
+        console.log("Database connection failed:", error.message);
+    }
+}
+
+connectToDatabase();
+
 
 // Create a schema
 const LoginSchema = new mongoose.Schema({

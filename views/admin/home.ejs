@@ -5,133 +5,206 @@
   <title>Vulnera Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      color: #DCF2F1;
+    }
+    .error-message {
+      background: linear-gradient(to right, #f44336, #d32f2f);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .success-message {
+      background: linear-gradient(to right, #4CAF50, #45a049);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      text-align: center;
+    }
+
+    .bg-button-refresh {
+    background-color: #263159;
+    }
+  </style>
 </head>
 <body class="text-white flex" style="background-color:#0F1035;">
 
   <!-- Sidebar -->
-  <aside class="w-64 p-5" style="background-color: #263159;">
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-      <img src="../img/logo.png" alt="Logo" style="width: 35px; height: 43px;">
-      <h1 class="text-3xl font-bold" style="background:linear-gradient(45deg,#FFD66B,#FFFBEB);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent; margin: 0;">Vulnera</h1>
-    </div>
-
-    <ul class="space-y-4">
-      <li><a href="/admin/home" class="block hover:text-blue-400">📊 Dashboard</a></li>
-      <li><a href="/uploadcsv" class="block hover:text-blue-400">📝 Upload File</a></li>
-      <li><a href="/logout" class="block text-red-400">Keluar</a></li>
-    </ul>
+  <aside class="fixed top-0 left-0 ...">
+    <%- include('sidebar') %>
   </aside>
 
   <!-- Main Content -->
-  <main class="flex-1 p-6 space-y-6">
+  <main class="ml-64 p-8 flex-1 p-6 space-y-6">
     <!-- Top Bar -->
     <div class="flex justify-between items-center">
-      <h2 class="text-xl font-semibold">Welcome, Admin 🚀</h2>
-      <input type="text" placeholder="Search..." class="px-3 py-2 rounded text-white" style="background-color: #263159;">
-    </div>
-
-    <!-- Ringkasan Status Keamanan Web Server -->
-    <div>
-      <h3 class="text-lg font-bold mb-4">Ringkasan Status Keamanan Web Server</h3>
-      <div class="grid grid-cols-3 gap-4">
-        <div class="p-4 rounded-lg shadow text-center" style="background-color: #263159;">
-          <p id="totalAttack" class="text-3xl font-bold text-red-400">250</p>
-          <span class="text-sm">Total Serangan (24h)</span>
-        </div>
-        <div class="p-4 rounded-lg shadow text-center" style="background-color: #263159;">
-          <p id="totalRequest" class="text-3xl font-bold text-green-400">1000</p>
-          <span class="text-sm">Total Request</span>
-        </div>
-        <div class="p-4 rounded-lg shadow text-center" style="background-color: #263159;">
-          <p id="attackPercentage" class="text-3xl font-bold text-yellow-400">25%</p>
-          <span class="text-sm">Persentase Serangan</span>
-        </div>
+      <h2 class="text-2xl font-bold text-yellow-400">🚀 Vulnera Admin Dashboard</h2>
+      <div class="flex items-center space-x-4">
+        <button id="refreshBtn" class="px-4 py-2 bg-button-refresh hover:bg-blue-700 rounded-lg transition-colors">
+          🔄 Refresh Data
+        </button>
+        <span id="lastUpdate" class="text-sm text-gray-400"></span>
       </div>
     </div>
 
-    <!-- Charts -->
-    <div class="grid grid-cols-3 gap-6">
-      <div class="p-5 rounded-lg shadow" style="background-color: #263159;">
-        <h3 class="mb-3 font-semibold">Distribusi Normal vs Serangan</h3>
-        <canvas id="trafficPie"></canvas>
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+        <p>Memuat data dashboard...</p>
       </div>
-      <div class="p-5 rounded-lg shadow" style="background-color: #263159;">
-        <h3 class="mb-3 font-semibold">Distribusi Port Sumber (src_port)</h3>
-        <canvas id="srcPortChart"></canvas>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="error-message" style="display: none;">
+      <h3>❌ Error Memuat Data</h3>
+      <p id="errorMessage"></p>
+      <button onclick="loadDashboard()" class="mt-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg">
+        Coba Lagi
+      </button>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboardContent" style="display: none;">
+      <!-- Ringkasan Status Keamanan -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold mb-4 text-yellow-400">📊 Ringkasan Status Keamanan Web Server</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform" style="background: linear-gradient(135deg, #263159, #365486);">
+            <div class="text-4xl mb-2">🛡️</div>
+            <p id="totalRequest" class="text-3xl font-bold text-green-400">0</p>
+            <span class="text-sm text-gray-300">Total Request</span>
+          </div>
+          <div class="p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform" style="background: linear-gradient(135deg, #263159, #365486);">
+            <div class="text-4xl mb-2">⚔️</div>
+            <p id="totalAttack" class="text-3xl font-bold text-red-400">0</p>
+            <span class="text-sm text-gray-300">Total Serangan</span>
+          </div>
+          <div class="p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform" style="background: linear-gradient(135deg, #263159, #365486);">
+            <div class="text-4xl mb-2">📈</div>
+            <p id="attackPercentage" class="text-3xl font-bold text-yellow-400">0%</p>
+            <span class="text-sm text-gray-300">Persentase Serangan</span>
+          </div>
+          <div class="p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform" style="background: linear-gradient(135deg, #263159, #365486);">
+            <div class="text-4xl mb-2">🤖</div>
+            <p id="mlProcessed" class="text-3xl font-bold text-blue-400">0</p>
+            <span class="text-sm text-gray-300">Diproses ML</span>
+          </div>
+        </div>
       </div>
-      <div class="p-5 rounded-lg shadow" style="background-color: #263159;">
-        <h3 class="mb-3 font-semibold">Distribusi HTTP Methods</h3>
-        <canvas id="httpMethodChart"></canvas>
+
+      <!-- Charts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <!-- Traffic Distribution Pie Chart -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🔄 Distribusi Traffic (Normal vs Serangan)</h3>
+          <div class="chart-container">
+            <canvas id="trafficPie"></canvas>
+          </div>
+        </div>
+
+        <!-- ML Prediction Distribution -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🤖 Distribusi Prediksi ML</h3>
+          <div class="chart-container">
+            <canvas id="predictionPie"></canvas>
+          </div>
+        </div>
+
+        <!-- HTTP Methods Chart -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🌐 HTTP Methods</h3>
+          <div class="chart-container">
+            <canvas id="httpMethodChart"></canvas>
+          </div>
+        </div>
+
+        <!-- HTTP Status Codes -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">📊 HTTP Status Codes</h3>
+          <div class="chart-container">
+            <canvas id="httpStatusChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Source Port Distribution -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🔌 Source Port Distribution</h3>
+          <div class="chart-container">
+            <canvas id="srcPortChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Attack Types Breakdown -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🎯 Jenis Serangan Detail</h3>
+          <div class="chart-container">
+            <canvas id="attackTypeChart"></canvas>
+          </div>
+        </div>
       </div>
-      <div class="p-5 rounded-lg shadow" style="background-color: #263159;">
-        <h3 class="mb-3 font-semibold">Status Kode HTTP</h3>
-        <canvas id="httpStatusChart"></canvas>
+
+      <!-- Large Charts -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
+        <!-- Request Trend Chart -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">📈 Tren Request Masuk</h3>
+          <div class="chart-container">
+            <canvas id="requestTrendChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Top IP Addresses -->
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="mb-4 font-semibold text-yellow-400">🌍 Top IP Addresses</h3>
+          <div class="chart-container">
+            <canvas id="ipAddressChart"></canvas>
+          </div>
+        </div>
       </div>
-      <div class="p-5 rounded-lg shadow" style="background-color: #263159;">
-        <h3 class="mb-3 font-semibold">Prediksi Model (Normal vs Serangan)</h3>
-        <canvas id="predictionPie"></canvas>
+
+     <!-- Data Table -->
+      <div class="mt-8 p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+        <h3 class="mb-4 font-semibold text-yellow-400">📋 Data Terbaru</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-gray-600">
+                <th class="text-left py-2 px-4">Timestamp</th>
+                <th class="text-left py-2 px-4">Source IP</th>
+                <th class="text-left py-2 px-4">Method</th>
+                <th class="text-left py-2 px-4">Status</th>
+                <th class="text-left py-2 px-4">Prediction</th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody">
+              <!-- Data will be populated here -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination controls -->
+        <div id="paginationControls" class="flex justify-center mt-4 space-x-2"></div>
       </div>
-      <div class="p-5 rounded-lg shadow" style="background-color: #263159;">
-        <h3 class="mb-3 font-semibold">Jenis Serangan</h3>
-        <canvas id="attackTypeChart"></canvas>
-      </div>
-      <div class="col-span-2 p-5 rounded-lg shadow" style="background-color: #263159;">
-        <h3 class="mb-3 font-semibold">Tren Jumlah Request Masuk</h3>
-        <canvas id="requestTrendChart"></canvas>
-      </div>
+
     </div>
   </main>
 
   <!-- ChartJS Script -->
-  <script>
-async function loadDashboard() {
-  const res = await fetch("/api/dashboard-data");
-  const data = await res.json();
-
-  // Update angka ringkasan
-  document.getElementById("totalAttack").innerText = data.totalAttack;
-  document.getElementById("totalRequest").innerText = data.totalRequest;
-  document.getElementById("attackPercentage").innerText = data.attackPercentage + "%";
-
-  // Traffic Pie
-  new Chart(document.getElementById('trafficPie'), {
-    type: 'pie',
-    data: {
-      labels: ['Normal', 'Serangan'],
-      datasets: [{
-        data: [data.totalRequest - data.totalAttack, data.totalAttack],
-        backgroundColor: ['#34D399', '#F87171']
-      }]
-    }
-  });
-
-  // HTTP Method Chart
-  new Chart(document.getElementById('httpMethodChart'), {
-    type: 'bar',
-    data: {
-      labels: Object.keys(data.methodCount),
-      datasets: [{
-        label: 'Jumlah Request',
-        data: Object.values(data.methodCount),
-        backgroundColor: '#FBBF24'
-      }]
-    }
-  });
-
-  // Status Code Chart
-  new Chart(document.getElementById('httpStatusChart'), {
-    type: 'bar',
-    data: {
-      labels: Object.keys(data.statusCount),
-      datasets: [{
-        label: 'Jumlah',
-        data: Object.values(data.statusCount),
-        backgroundColor: ['#34D399','#F87171','#FBBF24','#60A5FA']
-      }]
-    }
-  });
-}
-loadDashboard();
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/dashboard.js"></script>
 </body>
 </html>
