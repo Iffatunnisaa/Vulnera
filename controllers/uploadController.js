@@ -1,10 +1,7 @@
 const csv = require("csv-parser");
 const fs = require("fs");
-const { Dataset } = require("../config/database");
-const upload = require("../config/multer");
+const config = require("../config");
 const axios = require("axios");
-const { getFullEndpoint, validateFile, retryRequest } = require("../config/mlBackend");
-const environment = require("../config/environment");
 
 const uploadController = {
   // Upload CSV dengan prediksi ML
@@ -13,7 +10,7 @@ const uploadController = {
       console.log("=== Memulai proses upload CSV ===");
       
       // Validasi file
-      const fileValidation = validateFile(req.file);
+      const fileValidation = config.mlBackend.validateFile(req.file);
       if (!fileValidation.valid) {
         console.log("File validation failed:", fileValidation.error);
         req.flash("error_msg", fileValidation.error);
@@ -46,7 +43,7 @@ const uploadController = {
 
       // 3. Simpan hasil prediksi ke MongoDB
       console.log("Menyimpan ke MongoDB...");
-      const savedData = await Dataset.insertMany(predictedResults);
+      const savedData = await config.database.models.Dataset.insertMany(predictedResults);
       console.log(`Berhasil menyimpan ${savedData.length} baris ke MongoDB`);
 
       // 4. Hapus file temporary
@@ -67,7 +64,7 @@ const uploadController = {
   // Get dashboard data
   async getDashboardData(req, res) {
     try {
-      const allData = await Dataset.find({}).sort({ _id: -1 }).limit(1000);
+      const allData = await config.database.models.Dataset.find({}).sort({ _id: -1 }).limit(1000);
 
       console.log("=== Dashboard Data Debug ===");
       console.log("Total records found:", allData.length);
@@ -182,7 +179,7 @@ const uploadController = {
 async function sendToMLBackend(filePath) {
   try {
     console.log("Mengirim file ke backend ML...");
-    console.log("ML Backend URL:", environment.mlBackend.url);
+    console.log("ML Backend URL:", config.mlBackend.baseURL);
     
     // Baca file CSV
     const fileBuffer = fs.readFileSync(filePath);
@@ -197,24 +194,25 @@ async function sendToMLBackend(filePath) {
     });
 
     // Kirim ke backend ML dengan retry mechanism
-    const response = await retryRequest(async () => {
+    const response = await config.mlBackend.retryRequest(async () => {
       console.log("Mengirim request ke ML backend...");
-      return axios.post(`${environment.mlBackend.url}/predict-csv/`, form, {
+      return axios.post(`${config.mlBackend.baseURL}${config.mlBackend.endpoints.predictCSV}`, form, {
         headers: {
           ...form.getHeaders(),
+          ...config.mlBackend.request.headers
         },
         responseType: 'stream',
-        timeout: environment.mlBackend.timeout
+        timeout: config.mlBackend.request.timeout
       });
     });
 
     console.log("Response dari ML backend berhasil, menyimpan hasil...");
 
     // Simpan hasil prediksi ke file temporary
-    const tempFilePath = `${environment.upload.uploadPath}/predicted_${Date.now()}.csv`;
+    const tempFilePath = `${config.security.upload.uploadPath}/predicted_${Date.now()}.csv`;
     
     // Pastikan direktori upload ada
-    const uploadDir = environment.upload.uploadPath;
+    const uploadDir = config.security.upload.uploadPath;
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }

@@ -4,13 +4,16 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
 
+// Import centralized configuration
+const config = require("./config");
+
 // Import routes
 const pageRoutes = require("./routes/pageRoutes");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
-const port = 3000;
+const port = config.server.port;
 
 // Middleware untuk parsing data
 app.use(express.urlencoded({ extended: true }));
@@ -22,14 +25,23 @@ app.use(cookieParser());
 // Setup session
 app.use(
   session({
-    secret: "rahasia", // ganti dengan secret yang lebih kuat
-    resave: false,
-    saveUninitialized: true,
+    secret: config.server.session.secret,
+    resave: config.server.session.resave,
+    saveUninitialized: config.server.session.saveUninitialized,
+    cookie: config.server.session.cookie
   })
 );
 
-// Setup flash (HARUS setelah session)
+// Setup flash 
 app.use(flash());
+
+// Security headers
+app.use((req, res, next) => {
+  Object.entries(config.security.headers).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
+  next();
+});
 
 // Setup EJS
 app.set("view engine", "ejs");
@@ -67,5 +79,10 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log('=== Vulnera Server Started ===');
+  console.log(`Environment: ${config.server.env}`);
+  console.log(`Server running at http://${config.server.host}:${port}`);
+  console.log(`ML Backend URL: ${config.mlBackend.baseURL}`);
+  console.log(`Database URL: ${config.database.mongodb.url}`);
+  console.log('==============================');
 });

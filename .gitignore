@@ -1,5 +1,27 @@
+# Environment variables
 .env
+.env.local
+.env.development
+.env.production
+
+# Uploads and temporary files
 public/uploads
+logs/
+*.log
+
+# Dependencies
 node_modules
+
+# ML Service
 ml-service/backend/env
 ml-service/model/final_model_tf
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
