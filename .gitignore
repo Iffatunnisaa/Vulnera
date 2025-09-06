@@ -14,6 +14,7 @@ node_modules
 
 # ML Service
 ml-service/backend/env
+ml-service/backend/__pycache__
 ml-service/model/final_model_tf
 
 # IDE and editor files
