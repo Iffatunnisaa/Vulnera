@@ -81,6 +81,10 @@ function updateDashboard(data) {
     
     // Update data table
     updateDataTable(data);
+
+    // Update recommendations
+    updateRecommendations(data);
+  
     
   } catch (error) {
     console.error('Error updating dashboard:', error);
@@ -671,6 +675,52 @@ function goToPage(page) {
 }
 
 
+// Update recommendations using API
+async function updateRecommendations(data) {
+  try {
+    const response = await fetch("/admin/api/gemini-recommendations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const recommendations = await response.text();
+    const recoDiv = document.getElementById("recommendations");
+    if (recoDiv) {
+      // Parse markdown to HTML
+      const htmlContent = marked.parse(recommendations);
+      
+      recoDiv.innerHTML = `
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="text-lg font-semibold text-yellow-400 mb-4">📌 Saran & Rekomendasi</h3>
+          <div class="markdown-content">
+            ${htmlContent}
+          </div>
+        </div>
+      `;
+    }
+  } catch (error) {
+    console.error('Error getting recommendations:', error);
+    const recoDiv = document.getElementById("recommendations");
+    if (recoDiv) {
+      recoDiv.innerHTML = `
+        <div class="p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #263159, #365486);">
+          <h3 class="text-lg font-semibold text-yellow-400 mb-4">📌 Saran & Rekomendasi</h3>
+          <div class="markdown-content">
+            <p class="text-red-400">Gagal memuat rekomendasi: ${error.message}</p>
+          </div>
+        </div>
+      `;
+    }
+  }
+}
+
 // Update last update timestamp
 function updateLastUpdate() {
   try {
@@ -694,6 +744,12 @@ document.addEventListener('DOMContentLoaded', function() {
     refreshBtn.addEventListener('click', loadDashboard);
   }
   
+  // Set up download PDF button
+  const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+  if (downloadPdfBtn) {
+    downloadPdfBtn.addEventListener('click', generatePDF);
+  }
+  
   // Initial load
   loadDashboard();
   
@@ -701,6 +757,274 @@ document.addEventListener('DOMContentLoaded', function() {
   // setInterval(loadDashboard, 30000);
 });
 
+// PDF Generation Functions
+async function generatePDF() {
+  try {
+    // Show loading state
+    const downloadBtn = document.getElementById('downloadPdfBtn');
+    const originalText = downloadBtn.innerHTML;
+    downloadBtn.innerHTML = '⏳ Generating PDF...';
+    downloadBtn.disabled = true;
+
+    // Get recommendations for PDF
+    let recommendations = 'Loading recommendations...';
+    try {
+      const response = await fetch("/admin/api/gemini-recommendations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dashboardData)
+      });
+      
+      if (response.ok) {
+        const recommendationsText = await response.text();
+        // Convert markdown to HTML for PDF
+        recommendations = marked.parse(recommendationsText);
+      }
+    } catch (error) {
+      console.warn('Could not load recommendations for PDF:', error);
+      recommendations = 'Recommendations not available';
+    }
+
+    // Create PDF content
+    const pdfContent = createPDFContent(recommendations);
+    
+    // Create a temporary div for PDF content
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = pdfContent;
+    tempDiv.className = 'pdf-content';
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.left = '-9999px';
+    tempDiv.style.top = '0';
+    tempDiv.style.width = '800px';
+    document.body.appendChild(tempDiv);
+
+    // Generate PDF using html2canvas and jsPDF
+    const canvas = await html2canvas(tempDiv, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff'
+    });
+
+    // Remove temporary div
+    document.body.removeChild(tempDiv);
+
+    // Create PDF
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    
+    const imgData = canvas.toDataURL('image/png');
+    const imgWidth = 210; // A4 width in mm
+    const pageHeight = 295; // A4 height in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+
+    let position = 0;
+
+    // Add first page
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    // Add additional pages if needed
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    // Download PDF
+    const fileName = `Vulnera_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+    pdf.save(fileName);
+
+    // Reset button
+    downloadBtn.innerHTML = originalText;
+    downloadBtn.disabled = false;
+
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert('Error generating PDF: ' + error.message);
+    
+    // Reset button
+    const downloadBtn = document.getElementById('downloadPdfBtn');
+    downloadBtn.innerHTML = '📄 Download PDF';
+    downloadBtn.disabled = false;
+  }
+}
+
+function createPDFContent(recommendations = 'Recommendations not available') {
+  if (!dashboardData) {
+    return '<div class="pdf-content"><h1>No data available</h1></div>';
+  }
+
+  const data = dashboardData;
+  const currentDate = new Date().toLocaleDateString('id-ID');
+  const currentTime = new Date().toLocaleTimeString('id-ID');
+
+  return `
+    <div class="pdf-content">
+      <div class="pdf-header">
+        <h1>Vulnera Security Report</h1>
+        <p>Generated on ${currentDate} at ${currentTime}</p>
+      </div>
+
+      <div class="pdf-section">
+        <h2>Executive Summary</h2>
+        <div class="pdf-summary">
+          <div class="pdf-summary-item">
+            <div class="pdf-summary-value">${data.totalRequest || 0}</div>
+            <div class="pdf-summary-label">Total Requests</div>
+          </div>
+          <div class="pdf-summary-item">
+            <div class="pdf-summary-value">${data.totalAttack || 0}</div>
+            <div class="pdf-summary-label">Total Attacks</div>
+          </div>
+          <div class="pdf-summary-item">
+            <div class="pdf-summary-value">${data.attackPercentage || 0}%</div>
+            <div class="pdf-summary-label">Attack Percentage</div>
+          </div>
+          <div class="pdf-summary-item">
+            <div class="pdf-summary-value">${data.totalRequest || 0}</div>
+            <div class="pdf-summary-label">ML Processed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-section">
+        <h2>HTTP Methods Distribution</h2>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${Object.entries(data.methodCount || {}).map(([method, count]) => {
+              const percentage = data.totalRequest > 0 ? ((count / data.totalRequest) * 100).toFixed(2) : 0;
+              return `<tr><td>${method}</td><td>${count}</td><td>${percentage}%</td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-section">
+        <h2>HTTP Status Codes</h2>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>Status Code</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${Object.entries(data.statusCount || {}).map(([status, count]) => {
+              const percentage = data.totalRequest > 0 ? ((count / data.totalRequest) * 100).toFixed(2) : 0;
+              return `<tr><td>${status}</td><td>${count}</td><td>${percentage}%</td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-section">
+        <h2>Attack Types Distribution</h2>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>Attack Type</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${Object.entries(data.predictionCount || {}).map(([type, count]) => {
+              const percentage = data.totalRequest > 0 ? ((count / data.totalRequest) * 100).toFixed(2) : 0;
+              return `<tr><td>${type}</td><td>${count}</td><td>${percentage}%</td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-section">
+        <h2>Top Source Ports</h2>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>Port</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${Object.entries(data.srcPortCount || {})
+              .sort(([,a], [,b]) => b - a)
+              .slice(0, 10)
+              .map(([port, count]) => {
+                const percentage = data.totalRequest > 0 ? ((count / data.totalRequest) * 100).toFixed(2) : 0;
+                return `<tr><td>${port}</td><td>${count}</td><td>${percentage}%</td></tr>`;
+              }).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-section">
+        <h2>Top Source IPs</h2>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>IP Address</th>
+              <th>Request Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${(data.topIPs || []).map(ip => 
+              `<tr><td>${ip.ip}</td><td>${ip.count}</td></tr>`
+            ).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-section">
+        <h2>Recent Activity</h2>
+        <table class="pdf-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Source IP</th>
+              <th>Method</th>
+              <th>Status</th>
+              <th>Prediction</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${(data.recentData || []).slice(0, 20).map(item => 
+              `<tr>
+                <td>${item.timestamp || 'N/A'}</td>
+                <td>${item.src_ip || 'N/A'}</td>
+                <td>${item.request_http_method || 'N/A'}</td>
+                <td>${item.response_http_status_code || 'N/A'}</td>
+                <td>${item.predicted_label || 'Unknown'}</td>
+              </tr>`
+            ).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-section">
+        <h2>Security Recommendations</h2>
+        <div class="pdf-recommendations" style="line-height: 1.6; color: #333;">
+          ${recommendations}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // Export functions for global access
 window.loadDashboard = loadDashboard;
 window.refreshDashboard = loadDashboard;
+window.generatePDF = generatePDF;

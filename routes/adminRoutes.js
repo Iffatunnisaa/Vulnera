@@ -18,5 +18,6 @@ router.post("/upload", isAdmin, upload.single("csvFile"), handleMulterError, upl
 
 // API routes
 router.get("/api/dashboard-data", isAdmin, uploadController.getDashboardData);
+router.post("/api/gemini-recommendations", isAdmin, uploadController.getGeminiRecommendations);
 
 module.exports = router;

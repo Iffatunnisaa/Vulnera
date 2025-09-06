@@ -2,6 +2,7 @@ const csv = require("csv-parser");
 const fs = require("fs");
 const config = require("../config");
 const axios = require("axios");
+const getGeminiRecommendations = require("../ml-service/gemini");
 
 const uploadController = {
   // Upload CSV dengan prediksi ML
@@ -170,7 +171,24 @@ const uploadController = {
       console.error("Error dalam getDashboardData:", err);
       res.status(500).json({ error: err.message });
     }
-  }  
+  },
+
+  // Get Gemini recommendations
+  async getGeminiRecommendations(req, res) {
+    try {
+      const data = req.body;
+      
+      if (!data) {
+        return res.status(400).json({ error: "No data provided" });
+      }
+
+      const recommendations = await getGeminiRecommendations(data);
+      res.send(recommendations);
+    } catch (err) {
+      console.error("Error getting Gemini recommendations:", err);
+      res.status(500).json({ error: err.message });
+    }
+  }
 };
 
 // ===== HELPER FUNCTIONS =====
