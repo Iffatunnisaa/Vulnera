@@ -1,3 +1,5 @@
-/public/uploads
-/node_modules
-/ml-service/backend/env
+.env
+public/uploads
+node_modules
+ml-service/backend/env
+ml-service/model/final_model_tf

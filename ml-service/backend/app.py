@@ -82,10 +82,6 @@ def categorize_port(port):
         port = int(port)
     except:
         return "unknown"
-    try:
-        port = int(port)
-    except:
-        return "unknown"
     if port <= 1023:
         return "well_known"
     elif 1023 < port <= 49151:
@@ -105,15 +101,9 @@ def detect_suspicious_user_agent(ua):
         return 0
     suspicious_patterns = ['<script','union','select','drop','insert',
                            'delete','../','etc/passwd','cmd.exe','null']
-    if pd.isna(ua):
-        return 0
-    suspicious_patterns = ['<script','union','select','drop','insert',
-                           'delete','../','etc/passwd','cmd.exe','null']
     return int(any(pattern in ua.lower() for pattern in suspicious_patterns))
 
 def extract_browser_type(ua):
-    if pd.isna(ua):
-        return "Other"
     if pd.isna(ua):
         return "Other"
     ua_lower = ua.lower()
@@ -126,7 +116,6 @@ def extract_browser_type(ua):
     elif 'edge' in ua_lower:
         return 'Edge'
     elif any(bot_word in ua_lower for bot_word in ['bot','crawler','spider']):
-    elif any(bot_word in ua_lower for bot_word in ['bot','crawler','spider']):
         return 'Bot'
     elif any(tool in ua_lower for tool in ['curl','wget','python', 'sqlmap', 'fuzz faster', 'hydra']):
         return 'Tool'
@@ -136,15 +125,8 @@ def extract_browser_type(ua):
 def detect_suspicious_url_keywords(url):
     if pd.isna(url):
         return 0
-    if pd.isna(url):
-        return 0
     url_lower = url.lower()
     suspicious_keywords = [
-        'union','select','drop','insert','delete','update','from','where',
-        '../','..\\','/etc/','/passwd','/shadow',
-        'script','eval','exec','system','cmd.exe',
-        'admin','login','wp-admin','phpmyadmin',
-        '.php','.asp','.jsp','.cgi'
         'union','select','drop','insert','delete','update','from','where',
         '../','..\\','/etc/','/passwd','/shadow',
         'script','eval','exec','system','cmd.exe',
@@ -154,8 +136,6 @@ def detect_suspicious_url_keywords(url):
     return int(any(keyword in url_lower for keyword in suspicious_keywords))
 
 def extract_file_extension(url):
-    if pd.isna(url):
-        return 'none'
     if pd.isna(url):
         return 'none'
     try:
@@ -177,20 +157,14 @@ def categorize_file_extension(extension):
     sql_extensions = ['sql', 'sqlmap']
 
     if not extension or extension == 'none':
-    if not extension or extension == 'none':
         return 'None'
-    ext = extension.lower()
-    if ext in image_extensions:
     ext = extension.lower()
     if ext in image_extensions:
         return 'Image'
     elif ext in script_extensions:
-    elif ext in script_extensions:
         return 'Script/Web Dynamic'
     elif ext in document_extensions:
-    elif ext in document_extensions:
         return 'Document/Text'
-    elif ext in sql_extensions:
     elif ext in sql_extensions:
         return 'Database/SQL'
     else:
@@ -216,19 +190,15 @@ def categorize_status_message(status_message):
     if status_message == "OK":
         return "Successful"
     elif status_message in ["Moved Permanently","Found"]:
-    elif status_message in ["Moved Permanently","Found"]:
         return "Redirection"
     elif status_message in ["Bad Request","Method Not Allowed","Forbidden","Not Found"]:
-    elif status_message in ["Bad Request","Method Not Allowed","Forbidden","Not Found"]:
         return "Client Error"
-    elif status_message in ["Internal Server Error","Not Implemented","Too Many Requests"]:
     elif status_message in ["Internal Server Error","Not Implemented","Too Many Requests"]:
         return "Server Error"
     else:
         return "Other"
 
 # =============================
-# Preprocess DataFrame (versi inline)
 # Preprocess DataFrame (versi inline)
 # =============================
 def extract_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -244,7 +214,6 @@ def extract_features(df: pd.DataFrame) -> pd.DataFrame:
 
     df.dropna(how="all", inplace=True)
     df.drop_duplicates(inplace=True)
-
 
     #  2025 17:54:27.610347909 WIB
     
@@ -297,10 +266,6 @@ def extract_features(df: pd.DataFrame) -> pd.DataFrame:
                                  df['request_http_request'].astype(str).str.count('='))
         df['url_has_query'] = df['request_http_request'].astype(str).str.contains(r'\?', regex=True).astype(int)
         df['url_depth'] = df['request_http_request'].astype(str).str.count('/')
-        df['url_param_count'] = (df['request_http_request'].astype(str).str.count('&') +
-                                 df['request_http_request'].astype(str).str.count('='))
-        df['url_has_query'] = df['request_http_request'].astype(str).str.contains(r'\?', regex=True).astype(int)
-        df['url_depth'] = df['request_http_request'].astype(str).str.count('/')
         df['url_has_suspicious_keywords'] = df['request_http_request'].apply(detect_suspicious_url_keywords)
         df['url_file_extension'] = df['request_http_request'].apply(extract_file_extension)
         df['file_extension_category'] = df['url_file_extension'].apply(categorize_file_extension)
@@ -308,12 +273,8 @@ def extract_features(df: pd.DataFrame) -> pd.DataFrame:
     # Process 'response_http_status_code' column
     if 'response_http_status_code' in df.columns:
         df['response_http_status_code'] = pd.to_numeric(df['response_http_status_code'], errors='coerce').fillna(0).astype(int)
-        df['response_http_status_code'] = pd.to_numeric(df['response_http_status_code'], errors='coerce').fillna(0).astype(int)
         df['status_code_category'] = df['response_http_status_code'].apply(categorize_status_code)
         df['is_error_response'] = (df['response_http_status_code'] >= 400).astype(int)
-        df['is_server_error'] = (df['response_http_status_code'] >= 500).astype(int)
-        df['is_client_error'] = ((df['response_http_status_code'] >= 400) &
-                                 (df['response_http_status_code'] < 500)).astype(int)
         df['is_server_error'] = (df['response_http_status_code'] >= 500).astype(int)
         df['is_client_error'] = ((df['response_http_status_code'] >= 400) &
                                  (df['response_http_status_code'] < 500)).astype(int)

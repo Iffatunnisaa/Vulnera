@@ -1,0 +1,14 @@
+{
+    "label2id": {
+        "Normal": 0,
+        "SQL Injection": 1,
+        "Protocol Manipulation": 2,
+        "Dictionary-based Password Attack": 3
+    },
+    "id2label": {
+        "0": "Normal",
+        "1": "SQL Injection",
+        "2": "Protocol Manipulation",
+        "3": "Dictionary-based Password Attack"
+    }
+}
