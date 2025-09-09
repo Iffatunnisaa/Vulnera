@@ -8,7 +8,12 @@
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["vulnerability", "detection", "security", "network"],
+  "keywords": [
+    "vulnerability",
+    "detection",
+    "security",
+    "network"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -31,7 +36,9 @@
     "method-override": "^3.0.0",
     "mongodb": "^6.19.0",
     "mongoose": "^8.17.1",
-    "multer": "^2.0.2"
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",

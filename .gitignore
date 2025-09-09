@@ -1,5 +1,41 @@
-/public/uploads
+# ==================================
+# DEPENDENCIES & BUILD ARTIFACTS
+# ==================================
+# Folder yang diinstal oleh npm, bisa dibuat ulang dengan `npm install`
 /node_modules
-/ml-service/model
-views/admin/home copy.ejs
-views/admin/uploadcsv copy.ejs
+
+# ==================================
+# LOGS
+# ==================================
+# Abaikan semua file yang berakhiran .log
+*.log
+npm-debug.log*
+
+# ==================================
+# ENVIRONMENT VARIABLES
+# ==================================
+# SANGAT PENTING! Jangan pernah upload file .env yang berisi rahasia
+.env
+
+# ==================================
+# SIMULATION & SENSITIVE FILES
+# ==================================
+# Abaikan file output dari simulasi serangan
+*.csv
+*.pcap
+*.txt
+
+# Abaikan file berbahaya yang mungkin ter-upload
+shell.php
+
+# ==================================
+# PROYEK SPESIFIK
+# ==================================
+# File yang diunggah pengguna
+/public/uploads/
+
+# Model Machine Learning
+/ml-service/model/
+
+# File backup sementara
+* copy.ejs
