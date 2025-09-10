@@ -1,25 +1,16 @@
-# ==================================
-# DEPENDENCIES & BUILD ARTIFACTS
-# ==================================
-# Folder yang diinstal oleh npm, bisa dibuat ulang dengan `npm install`
+# DEPENDENCIES 
 /node_modules
 
-# ==================================
 # LOGS
-# ==================================
-# Abaikan semua file yang berakhiran .log
 *.log
 npm-debug.log*
 
-# ==================================
 # ENVIRONMENT VARIABLES
-# ==================================
-# SANGAT PENTING! Jangan pernah upload file .env yang berisi rahasia
 .env
+.env.local
+.env.development
+.env.production
 
-# ==================================
-# SIMULATION & SENSITIVE FILES
-# ==================================
 # Abaikan file output dari simulasi serangan
 *.csv
 *.pcap
@@ -28,14 +19,28 @@ npm-debug.log*
 # Abaikan file berbahaya yang mungkin ter-upload
 shell.php
 
-# ==================================
-# PROYEK SPESIFIK
-# ==================================
 # File yang diunggah pengguna
 /public/uploads/
 
-# Model Machine Learning
-/ml-service/model/
+# ML Service
+/ml-service/backend/env
+/ml-service/backend/__pycache__
+/ml-service/model/final_model_tf
 
 # File backup sementara
 * copy.ejs
+
+# Uploads and temporary files
+public/uploads
+logs/
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db

@@ -95,24 +95,40 @@ npm install
 ```
 
 ### 3. Install Dependencies Python
+
+**Linux/macOS**
+
 ```bash
 cd ml-service/backend
+python -m venv env
+source env/bin/activate
 pip install -r requirements.txt
 ```
 
+**Windows (PowerShell/Command Prompt)**
+
+```powershell
+cd ml-service\backend
+python -m venv env
+.\env\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 4. Download Model
+```bash
+cd ../model
+./download_model.sh
+```
+
 ### 4. Setup Environment Variables
-Buat file `.env` di root directory:
-```env
-MONGODB_URL=mongodb://localhost:27017/vulnera
-ML_BACKEND_URL=http://localhost:8000
-SESSION_SECRET=your_session_secret_here
-PORT=3000
+```bash
+cp .env.example .env
 ```
 
 ### 5. Setup Database
 ```bash
 # Start MongoDB service
-sudo systemctl start mongod
+sudo systemctl start mongodb
 
 # Atau gunakan MongoDB Atlas untuk cloud database
 ```

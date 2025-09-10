@@ -4,7 +4,7 @@ require('dotenv').config();
 const environment = {
   // Database Configuration
   mongodb: {
-    url: process.env.MONGODB_URL || 'mongodb://localhost:27017/vulnera'
+    url: process.env.MONGODB_URL
   },
 
   // Server Configuration
@@ -46,7 +46,7 @@ function validateConfig() {
   }
 }
 
-// Log konfigurasi (tanpa sensitive data)
+// Log konfigurasi
 function logConfig() {
   console.log('=== Environment Configuration ===');
   console.log(`Server Port: ${environment.server.port}`);

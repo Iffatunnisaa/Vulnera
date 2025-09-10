@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { isAdmin } = require("../middleware/auth");
 const uploadController = require("../controllers/uploadController");
-const upload = require("../config/multer");
+const { upload, handleMulterError } = require("../config/multer");
 
 // Admin dashboard
 router.get("/home", isAdmin, (req, res) => {
@@ -14,9 +14,10 @@ router.get("/uploadcsv", isAdmin, (req, res) => {
   res.render("admin/uploadcsv", { title: "Upload CSV" });
 });
 
-router.post("/upload", isAdmin, upload.single("csvFile"), uploadController.uploadCSV);
+router.post("/upload", isAdmin, upload.single("csvFile"), handleMulterError, uploadController.uploadCSV);
 
 // API routes
 router.get("/api/dashboard-data", isAdmin, uploadController.getDashboardData);
+router.post("/api/gemini-recommendations", isAdmin, uploadController.getGeminiRecommendations);
 
 module.exports = router;
