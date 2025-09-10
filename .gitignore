@@ -1,0 +1,46 @@
+# DEPENDENCIES 
+/node_modules
+
+# LOGS
+*.log
+npm-debug.log*
+
+# ENVIRONMENT VARIABLES
+.env
+.env.local
+.env.development
+.env.production
+
+# Abaikan file output dari simulasi serangan
+*.csv
+*.pcap
+*.txt
+
+# Abaikan file berbahaya yang mungkin ter-upload
+shell.php
+
+# File yang diunggah pengguna
+/public/uploads/
+
+# ML Service
+/ml-service/backend/env
+/ml-service/backend/__pycache__
+/ml-service/model/final_model_tf
+
+# File backup sementara
+* copy.ejs
+
+# Uploads and temporary files
+public/uploads
+logs/
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
