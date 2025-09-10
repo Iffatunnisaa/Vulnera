@@ -13,7 +13,6 @@ router.get("/home", isAdmin, (req, res) => {
 router.get("/uploadcsv", isAdmin, (req, res) => {
   res.render("admin/uploadcsv", { title: "Upload CSV" });
 });
-
 router.post("/upload", isAdmin, upload.single("csvFile"), handleMulterError, uploadController.uploadCSV);
 
 // API routes

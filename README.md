@@ -1,6 +1,6 @@
 # Vulnera - Vulnerability Detection System
 
-Vulnera adalah sistem deteksi kerentanan berbasis machine learning yang dirancang untuk menganalisis traffic jaringan dan mengidentifikasi potensi serangan cyber. Sistem ini menggunakan algoritma Random Forest dan XGBoost untuk mendeteksi anomali dan serangan dalam data jaringan.
+Vulnera adalah sistem deteksi kerentanan berbasis machine learning yang dirancang untuk menganalisis traffic jaringan dan mengidentifikasi potensi serangan cyber. Sistem ini menggunakan model hybrid yang menggabungkan BERT (Bidirectional Encoder Representations from Transformers) dengan TensorFlow untuk mendeteksi anomali dan serangan dalam data jaringan.
 
 ## 🏗️ Struktur Project
 
@@ -11,8 +11,11 @@ Vulnera/
 ├── config/                         # Konfigurasi aplikasi
 │   ├── database.js                # Konfigurasi database
 │   ├── environment.js             # Konfigurasi environment variables
+│   ├── index.js                   # Konfigurasi utama
 │   ├── mlBackend.js               # Konfigurasi ML backend
-│   └── multer.js                  # Konfigurasi file upload
+│   ├── multer.js                  # Konfigurasi file upload
+│   ├── security.js                # Konfigurasi keamanan
+│   └── server.js                  # Konfigurasi server
 ├── controllers/                    # Business logic
 │   ├── authController.js          # Kontroler autentikasi
 │   └── uploadController.js        # Kontroler upload dan analisis CSV
@@ -35,12 +38,21 @@ Vulnera/
 │   ├── js/                        # JavaScript client-side
 │   ├── img/                       # Gambar
 │   └── uploads/                   # File upload temporary
-└── ml-service/                     # Machine Learning Service
-    ├── backend/                    # FastAPI backend
-    │   └── app.py                 # API ML service
-    └── model/                      # Model ML yang sudah dilatih
-        ├── random_forest_model.pkl # Model Random Forest
-        └── xgboost_model.pkl      # Model XGBoost
+├── ml-service/                     # Machine Learning Service
+│   ├── backend/                    # FastAPI backend
+│   │   ├── app.py                 # API ML service
+│   │   ├── requirements.txt       # Python dependencies
+│   │   └── env/                   # Python virtual environment
+│   ├── gemini.js                  # Gemini AI integration
+│   └── model/                      # Model ML yang sudah dilatih
+│       ├── artifacts/             # Model artifacts
+│       │   ├── label_mappings.json
+│       │   ├── scaler.joblib
+│       │   ├── target_encoder.joblib
+│       │   └── tokenizer/         # BERT tokenizer
+│       ├── final_model_tf/        # TensorFlow saved model
+│       └── download_model.sh      # Script download model
+└── data.json                      # Sample data
 ```
 
 ## ✨ Fitur Utama
@@ -58,10 +70,11 @@ Vulnera/
 - Penyimpanan hasil analisis ke MongoDB
 
 ### 🤖 Machine Learning Integration
-- **Random Forest Model**: Deteksi anomali traffic jaringan
-- **XGBoost Model**: Klasifikasi serangan cyber
-- Feature extraction otomatis dari data jaringan
-- Prediksi real-time dengan confidence score
+- **Hybrid BERT-TensorFlow Model**: Deteksi anomali dan klasifikasi serangan cyber
+- **BERT Tokenizer**: Pemrosesan teks untuk analisis User-Agent dan URL
+- **Feature Engineering**: Ekstraksi fitur otomatis dari data jaringan
+- **Real-time Prediction**: Prediksi real-time dengan confidence score
+- **Multi-modal Processing**: Kombinasi fitur numerik, kategorikal, dan teks
 
 ### 📈 Dashboard Analytics
 - Visualisasi data serangan vs normal traffic
@@ -116,16 +129,16 @@ pip install -r requirements.txt
 
 ### 4. Download Model
 ```bash
-cd ../model
+cd ml-service/model
 ./download_model.sh
 ```
 
-### 4. Setup Environment Variables
+### 5. Setup Environment Variables
 ```bash
 cp .env.example .env
 ```
 
-### 5. Setup Database
+### 6. Setup Database
 ```bash
 # Start MongoDB service
 sudo systemctl start mongodb
@@ -133,7 +146,7 @@ sudo systemctl start mongodb
 # Atau gunakan MongoDB Atlas untuk cloud database
 ```
 
-### 6. Start Services
+### 7. Start Services
 
 #### Start ML Backend (Python FastAPI)
 ```bash
@@ -150,7 +163,7 @@ npm run dev
 npm start
 ```
 
-### 7. Akses Aplikasi
+### 8. Akses Aplikasi
 - Web App: http://localhost:3000
 - ML API: http://localhost:8000
 - API Docs: http://localhost:8000/docs
@@ -172,10 +185,13 @@ Tampilkan Dashboard
   - Browser type classification
   - URL security analysis
   - File extension categorization
+  - HTTP status code analysis
+  - URL depth dan parameter counting
 
 - **Model Prediction**: 
-  - Random Forest untuk deteksi anomali
-  - XGBoost untuk klasifikasi serangan
+  - Hybrid BERT-TensorFlow model untuk deteksi anomali dan klasifikasi
+  - BERT tokenizer untuk pemrosesan teks (User-Agent, URL, HTTP messages)
+  - Multi-modal input processing (numerik, kategorikal, teks)
   - Output: predicted_label + confidence_score
 
 ### 3. Data Flow
@@ -195,6 +211,10 @@ Dashboard Visualization
 - **Bcrypt**: Password hashing
 - **EJS**: Template engine
 - **Axios**: HTTP client untuk ML API
+- **Connect-mongo**: MongoDB session store
+- **Express-validator**: Input validation
+- **Joi**: Schema validation
+- **CSV-parser**: CSV file processing
 
 ### Frontend Dependencies
 - **Bootstrap**: CSS framework
@@ -205,8 +225,12 @@ Dashboard Visualization
 - **FastAPI**: Python web framework
 - **Pandas**: Data manipulation
 - **NumPy**: Numerical computing
+- **TensorFlow**: Deep learning framework
+- **Transformers**: BERT model dan tokenizer
 - **Scikit-learn**: ML algorithms
 - **Joblib**: Model serialization
+- **Category-encoders**: Categorical feature encoding
+- **Imbalanced-learn**: Handling imbalanced datasets
 
 ### Development Dependencies
 - **Nodemon**: Auto-restart development server
@@ -248,8 +272,9 @@ const upload = multer({
 - `GET /admin/uploadcsv` - CSV upload page
 
 ### Machine Learning API
-- `POST /predict` - CSV prediction endpoint
-- `GET /health` - Health check endpoint
+- `POST /predict-csv/` - CSV prediction endpoint
+- `GET /health/` - Health check endpoint
+- `GET /status/` - Status check endpoint
 
 ## 🔒 Security Features
 
@@ -266,7 +291,9 @@ const upload = multer({
 1. **MongoDB Connection Error**: Pastikan MongoDB service berjalan
 2. **ML Backend Error**: Cek apakah FastAPI service berjalan di port 8000
 3. **File Upload Error**: Pastikan folder uploads memiliki permission write
-4. **Model Loading Error**: Pastikan file .pkl ada di folder model/
+4. **Model Loading Error**: Pastikan model artifacts ada di folder ml-service/model/artifacts/
+5. **BERT Tokenizer Error**: Pastikan tokenizer sudah didownload di ml-service/model/artifacts/tokenizer/
+6. **TensorFlow Model Error**: Pastikan model TensorFlow ada di ml-service/model/final_model_tf/
 
 ### Debug Mode
 ```bash
