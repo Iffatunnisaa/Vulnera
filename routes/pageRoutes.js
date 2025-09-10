@@ -21,7 +21,7 @@ router.get("/homepage", isAuth, (req, res) => {
   });
 });
 
-// Redirect /uploadcsv ke /admin/uploadcsv untuk kemudahan akses
+// Redirect /uploadcsv ke /admin/uploadcsv
 router.get("/uploadcsv", (req, res) => {
   res.redirect("/admin/uploadcsv");
 });

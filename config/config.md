@@ -9,10 +9,12 @@ config/
 ├── index.js          # Main configuration index - exports all configs
 ├── server.js         # Server and application configuration
 ├── database.js       # Database connection and model configuration
+├── environment.js    # Environment variables configuration
 ├── security.js       # Security settings and file upload configuration
 ├── mlBackend.js      # ML backend service configuration
 ├── multer.js         # File upload middleware configuration
-└── README.md         # This documentation file
+├── config.md         # This documentation file
+└── README.md         # Configuration README
 ```
 
 ## Configuration Files
@@ -40,7 +42,14 @@ Contains database-related settings including:
 - Database models
 - Connection retry settings
 
-### 4. `security.js` - Security Configuration
+### 4. `environment.js` - Environment Configuration
+Contains environment variables configuration including:
+- Environment variable loading and validation
+- Default values for development
+- Environment-specific settings
+- Configuration validation helpers
+
+### 5. `security.js` - Security Configuration
 Contains security-related settings including:
 - Password hashing (bcrypt) configuration
 - JWT configuration (for future use)
@@ -48,14 +57,15 @@ Contains security-related settings including:
 - Security headers
 - File upload security settings
 
-### 5. `mlBackend.js` - ML Backend Configuration
+### 6. `mlBackend.js` - ML Backend Configuration
 Contains ML backend service settings including:
 - Backend URL and endpoints
 - Request timeout and retry settings
 - File upload configuration for ML service
 - Health check configuration
+- Helper functions for ML service integration
 
-### 6. `multer.js` - File Upload Configuration
+### 7. `multer.js` - File Upload Configuration
 Contains file upload middleware settings including:
 - Storage configuration
 - File filtering
@@ -113,6 +123,19 @@ const result = await config.mlBackend.retryRequest(async () => {
 });
 ```
 
+### Using Environment Configuration
+```javascript
+const config = require('./config');
+
+// Access environment-specific settings
+const isDevelopment = config.environment.NODE_ENV === 'development';
+const isProduction = config.environment.NODE_ENV === 'production';
+
+// Access environment variables
+const mongoUrl = config.environment.MONGODB_URL;
+const sessionSecret = config.environment.SESSION_SECRET;
+```
+
 ### Using Multer Configuration
 ```javascript
 const config = require('./config');
@@ -145,7 +168,8 @@ All configuration files include validation functions that:
 2. Create or update the appropriate configuration file
 3. Add validation for the new configuration
 4. Export the new configuration in `index.js`
-5. Update this documentation
+5. Update the centralized configuration object
+6. Update this documentation
 
 ## Troubleshooting
 
@@ -163,3 +187,8 @@ All configuration files include validation functions that:
 - Verify `MONGODB_URL` is correct
 - Check MongoDB server is running
 - Review connection options in `database.js`
+
+### Environment Configuration Issues
+- Check if `environment.js` is properly loaded
+- Verify environment variables are set correctly
+- Review environment-specific settings

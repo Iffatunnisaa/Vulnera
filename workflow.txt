@@ -1,0 +1,391 @@
+# VULNERA - WORKFLOW DAN ALUR PROSES SISTEM DETEKSI KERENTANAN
+
+## 📋 OVERVIEW SISTEM
+Vulnera adalah sistem deteksi kerentanan berbasis machine learning yang menganalisis traffic jaringan untuk mengidentifikasi serangan cyber. Sistem menggunakan model hybrid BERT-TensorFlow untuk deteksi anomali dan klasifikasi serangan.
+
+## 🏗️ ARSITEKTUR SISTEM
+
+### Komponen Utama:
+1. **Web Application (Node.js/Express.js)** - Port 3000
+2. **ML Backend (Python/FastAPI)** - Port 8000
+3. **Database (MongoDB)** - Port 27017
+4. **AI Integration (Gemini API)** - External
+
+## 🔄 ALUR PROSES LENGKAP
+
+### 1. INISIALISASI SISTEM
+
+#### 1.1 Startup Web Application
+```
+app.js → config/index.js → load all configurations
+├── server.js (port, session, CORS)
+├── database.js (MongoDB connection)
+├── security.js (file upload, security headers)
+├── mlBackend.js (ML service configuration)
+└── multer.js (file upload middleware)
+```
+
+#### 1.2 Database Connection
+```
+utils/db.js → mongoose.connect() → MongoDB
+├── Users collection (authentication)
+└── Dataset collection (CSV analysis results)
+```
+
+#### 1.3 ML Backend Startup
+```
+ml-service/backend/app.py → FastAPI server
+├── Load BERT tokenizer
+├── Load TensorFlow model
+├── Load scaler & encoder
+└── Start prediction endpoints
+```
+
+### 2. SISTEM AUTENTIKASI
+
+#### 2.1 User Registration Flow
+```
+GET /register → register.ejs
+POST /register → authController.register()
+├── Validate input data
+├── Check email uniqueness
+├── Hash password (bcrypt)
+├── Save to Users collection
+└── Redirect to /login
+```
+
+#### 2.2 User Login Flow
+```
+GET /login → login.ejs
+POST /login → authController.login()
+├── Check admin credentials (admin@gmail.com)
+├── OR validate user credentials
+├── Compare password (bcrypt)
+├── Create session
+└── Redirect based on role:
+    ├── Admin → /admin/home
+    └── User → /homepage
+```
+
+#### 2.3 Session Management
+```
+express-session middleware
+├── Store user data in session
+├── Set authentication flags
+├── Handle session cookies
+└── Middleware protection (isAuth, isAdmin)
+```
+
+### 3. UPLOAD DAN ANALISIS CSV
+
+#### 3.1 File Upload Process
+```
+GET /admin/uploadcsv → uploadcsv.ejs
+POST /admin/upload → uploadController.uploadCSV()
+├── Multer middleware validation
+├── File type & size validation
+├── Save to public/uploads/
+└── Proceed to ML processing
+```
+
+#### 3.2 ML Backend Processing
+```
+uploadController.sendToMLBackend()
+├── Read CSV file
+├── Create FormData
+├── POST to ML Backend (/predict-csv/)
+└── ML Backend Processing:
+    ├── Load CSV with pandas
+    ├── Feature extraction
+    ├── BERT tokenization
+    ├── Model prediction
+    └── Return predicted CSV
+```
+
+#### 3.3 Feature Engineering (ML Backend)
+```
+extract_features() function:
+├── Port categorization (well-known, registered, dynamic)
+├── Bot detection from User-Agent
+├── Suspicious pattern detection
+├── Browser type classification
+├── URL security analysis
+├── File extension categorization
+├── HTTP status code analysis
+└── URL depth & parameter counting
+```
+
+#### 3.4 Model Prediction
+```
+Hybrid BERT-TensorFlow Model:
+├── Text features → BERT tokenizer
+├── Categorical features → Target encoder
+├── Numeric features → Scaler
+├── Multi-modal input processing
+├── TensorFlow model inference
+└── Output: predicted_label
+```
+
+#### 3.5 Data Storage
+```
+uploadController.readPredictedCSV()
+├── Parse predicted CSV results
+├── Save to MongoDB Dataset collection
+├── Cleanup temporary files
+└── Flash success message
+```
+
+### 4. DASHBOARD DAN VISUALISASI
+
+#### 4.1 Dashboard Data Loading
+```
+GET /admin/home → home.ejs
+GET /admin/api/dashboard-data → uploadController.getDashboardData()
+├── Query MongoDB Dataset collection
+├── Calculate statistics:
+│   ├── Total requests
+│   ├── Total attacks
+│   ├── Attack percentage
+│   ├── HTTP method distribution
+│   ├── Status code distribution
+│   ├── Source port distribution
+│   └── Prediction distribution
+└── Return JSON data
+```
+
+#### 4.2 Frontend Visualization
+```
+dashboard.js → Chart.js rendering
+├── Traffic distribution pie chart
+├── ML prediction distribution
+├── HTTP methods bar chart
+├── Status codes bar chart
+├── Source ports chart
+├── Attack types breakdown
+├── Request trend line chart
+├── Top IP addresses chart
+└── Recent data table
+```
+
+### 5. AI RECOMMENDATIONS
+
+#### 5.1 Gemini Integration
+```
+POST /admin/api/gemini-recommendations
+├── uploadController.getGeminiRecommendations()
+├── ml-service/gemini.js
+├── Format dashboard data
+├── Create security analysis prompt
+├── Call Gemini API
+└── Return markdown recommendations
+```
+
+#### 5.2 Recommendation Display
+```
+Frontend processing:
+├── Parse markdown response
+├── Apply custom styling
+├── Display in recommendations section
+└── Enable PDF export
+```
+
+### 6. API ENDPOINTS
+
+#### 6.1 Web Application APIs
+```
+Authentication:
+├── GET /login - Login page
+├── POST /login - Login process
+├── GET /register - Registration page
+├── POST /register - Registration process
+└── GET /logout - Logout process
+
+Pages:
+├── GET / - Landing page
+├── GET /homepage - User homepage (protected)
+└── GET /admin/home - Admin dashboard (protected)
+
+Admin APIs:
+├── GET /admin/uploadcsv - Upload page
+├── POST /admin/upload - CSV upload
+├── GET /admin/api/dashboard-data - Dashboard data
+└── POST /admin/api/gemini-recommendations - AI recommendations
+```
+
+#### 6.2 ML Backend APIs
+```
+FastAPI Endpoints:
+├── POST /predict-csv/ - CSV prediction
+├── GET /health/ - Health check
+└── GET /status/ - Status check
+```
+
+### 7. SECURITY FEATURES
+
+#### 7.1 Authentication Security
+```
+├── Password hashing (bcrypt, salt rounds: 10)
+├── Session-based authentication
+├── Role-based access control (Admin/User)
+├── Session timeout & cleanup
+└── CSRF protection via flash messages
+```
+
+#### 7.2 File Upload Security
+```
+├── File type validation (CSV only)
+├── File size limits (configurable)
+├── MIME type checking
+├── Secure file naming
+└── Temporary file cleanup
+```
+
+#### 7.3 Application Security
+```
+├── Security headers (X-Frame-Options, etc.)
+├── Input validation & sanitization
+├── Error handling without data exposure
+├── Rate limiting (configurable)
+└── Secure configuration management
+```
+
+### 8. ERROR HANDLING
+
+#### 8.1 Web Application Errors
+```
+├── Database connection errors
+├── ML backend communication errors
+├── File upload validation errors
+├── Authentication errors
+└── General application errors
+```
+
+#### 8.2 ML Backend Errors
+```
+├── Model loading errors
+├── Tokenizer errors
+├── Prediction processing errors
+├── File format errors
+└── Resource exhaustion errors
+```
+
+### 9. MONITORING DAN LOGGING
+
+#### 9.1 Application Logging
+```
+├── Configuration validation logs
+├── Database connection status
+├── ML backend communication logs
+├── File upload process logs
+├── Error logs with stack traces
+└── Performance metrics
+```
+
+#### 9.2 Dashboard Monitoring
+```
+├── Real-time data refresh
+├── Last update timestamps
+├── Data source indicators
+├── Error state handling
+└── Loading state management
+```
+
+### 10. DEPLOYMENT WORKFLOW
+
+#### 10.1 Development Setup
+```
+1. Clone repository
+2. Install Node.js dependencies (npm install)
+3. Install Python dependencies (pip install -r requirements.txt)
+4. Setup MongoDB
+5. Download ML models
+6. Configure environment variables
+7. Start services:
+   ├── ML Backend (uvicorn app:app --reload --port 8000)
+   └── Web App (npm run dev)
+```
+
+#### 10.2 Production Deployment
+```
+1. Environment configuration
+2. Database setup
+3. Model deployment
+4. Service startup:
+   ├── ML Backend (uvicorn app:app --port 8000)
+   └── Web App (npm start)
+5. Load balancing (optional)
+6. Monitoring setup
+```
+
+### 11. PERFORMANCE OPTIMIZATIONS
+
+#### 11.1 Database Optimizations
+```
+├── Indexed queries
+├── Connection pooling
+├── Query optimization
+└── Data pagination
+```
+
+#### 11.2 ML Backend Optimizations
+```
+├── Model caching
+├── Batch processing
+├── Memory management
+└── Async processing
+```
+
+#### 11.3 Frontend Optimizations
+```
+├── Chart.js lazy loading
+├── Data caching
+├── Responsive design
+└── Error boundaries
+```
+
+## 🔧 TROUBLESHOOTING COMMON ISSUES
+
+### Database Issues
+- Check MongoDB connection string
+- Verify database service is running
+- Check collection permissions
+
+### ML Backend Issues
+- Verify FastAPI service on port 8000
+- Check model files in artifacts/
+- Verify tokenizer configuration
+- Check TensorFlow model loading
+
+### File Upload Issues
+- Check upload directory permissions
+- Verify file size limits
+- Check MIME type validation
+- Ensure temporary file cleanup
+
+### Authentication Issues
+- Check session configuration
+- Verify password hashing
+- Check role-based access
+- Validate session timeout
+
+## 📊 METRICS DAN MONITORING
+
+### Key Performance Indicators
+- Total requests processed
+- Attack detection accuracy
+- System response time
+- Error rates
+- User engagement
+
+### Monitoring Points
+- Database query performance
+- ML prediction latency
+- File upload success rate
+- Authentication success rate
+- Dashboard load time
+
+---
+
+**Vulnera Workflow v1.0** - Comprehensive system process documentation
+Generated: $(date)
+System: Vulnerability Detection with Hybrid BERT-TensorFlow Model
