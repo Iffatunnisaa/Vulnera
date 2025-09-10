@@ -3,6 +3,8 @@ const path = require("path");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
+const morgan = require("morgan");
+const fs = require("fs");
 
 // Import centralized configuration
 const config = require("./config");
@@ -14,6 +16,13 @@ const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 const port = config.server.port;
+
+// Buat stream penulisan log. 'a' berarti append (tambahkan), tidak menimpa.
+const accessLogStream = fs.createWriteStream(path.join('/var/log/vulnera', 'access.log'), { flags: 'a' });
+
+// Setup middleware morgan untuk mencatat semua permintaan ke file
+// Format 'combined' adalah format standar Apache yang sangat informatif.
+app.use(morgan('combined', { stream: accessLogStream }));
 
 // Middleware untuk parsing data
 app.use(express.urlencoded({ extended: true }));

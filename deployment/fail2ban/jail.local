@@ -1,0 +1,22 @@
+[DEFAULT]
+bantime = 600
+findtime = 600
+maxretry = 5
+
+# Jail 1: Melindungi dari Brute Force (membaca auth.log)
+[vulnera-auth]
+enabled   = true
+port      = 3000
+filter    = vulnera-auth
+logpath   = /var/log/vulnera/auth.log
+action    = ufw
+
+# Jail 2: Melindungi dari Fuzzing & Anomali lain (membaca access.log)
+[vulnera-badbots]
+enabled   = true
+port      = 3000
+filter    = vulnera-generic
+logpath   = /var/log/vulnera/access.log
+maxretry  = 10
+findtime  = 60
+action    = ufw

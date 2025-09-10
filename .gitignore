@@ -1,21 +1,39 @@
-# Environment variables
+# DEPENDENCIES 
+/node_modules
+
+# LOGS
+*.log
+npm-debug.log*
+
+# ENVIRONMENT VARIABLES
 .env
 .env.local
 .env.development
 .env.production
 
+# Abaikan file output dari simulasi serangan
+*.csv
+*.pcap
+*.txt
+
+# Abaikan file berbahaya yang mungkin ter-upload
+shell.php
+
+# File yang diunggah pengguna
+/public/uploads/
+
+# ML Service
+/ml-service/backend/env
+/ml-service/backend/__pycache__
+/ml-service/model/final_model_tf
+
+# File backup sementara
+* copy.ejs
+
 # Uploads and temporary files
 public/uploads
 logs/
 *.log
-
-# Dependencies
-node_modules
-
-# ML Service
-ml-service/backend/env
-ml-service/backend/__pycache__
-ml-service/model/final_model_tf
 
 # IDE and editor files
 .vscode/

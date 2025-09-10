@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const { Users } = require("../config/database");
+const logger = require('../utils/logger');
 
 const authController = {
   // Register user
@@ -32,6 +33,7 @@ const authController = {
       return res.redirect("/login");
 
     } catch (err) {
+      logger.error(`Server error during registration: ${err.message}`);
       console.error(err);
       req.flash("error", "Terjadi kesalahan. Silakan coba lagi.");
       return res.redirect("/register");
@@ -41,10 +43,12 @@ const authController = {
   // Login user
   async login(req, res) {
     const { email, password } = req.body;
+    const attackerIp = req.ip; // <-- LOGGING: Dapatkan alamat IP penyerang dari request
 
     try {
       // Cek dulu kalau akun admin super
       if (email === "admin@gmail.com" && password === "admin123") {
+	logger.info(`Successful super admin login for user '${email}', from IP ${attackerIp}`);
         req.session.user = { name: "Super Admin", email: email, role: "admin" };
         req.session.isAuth = true;
         return res.redirect("admin/home");
@@ -53,20 +57,24 @@ const authController = {
       // Kalau bukan admin, cek database users
       const check = await Users.findOne({ email: email });
       if (!check) {
+	logger.warn(`Failed login attempt: User '${email}' not found, from IP ${attackerIp}`);
         req.flash("error", "Email tidak ditemukan");
         return res.redirect("/login");
       }
 
       const isPasswordMatch = await bcrypt.compare(password, check.password);
       if (isPasswordMatch) {
+	logger.info(`Successful login for user '${email}', from IP ${attackerIp}`);
         req.session.user = check; // Simpan user dari DB
         req.session.isAuth = true;
         return res.redirect("/homepage");
       } else {
+	logger.warn(`Failed login attempt: Incorrect password for user '${email}', from IP ${attackerIp}`);
         req.flash("error", "Password salah!");
         return res.redirect("/login");
       }
     } catch (err) {
+      logger.error(`Server error during login for user '${email}', from IP ${attackerIp}: ${err.message}`);
       console.error(err);
       req.flash("error", "Terjadi kesalahan!");
       return res.redirect("/login");
