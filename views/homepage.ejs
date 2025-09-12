@@ -117,7 +117,7 @@
       Kami siap mendengar ide dan kebutuhan Anda untuk keamanan digital yang lebih baik.
     </p>
 
-    <form action="/send-feedback" method="POST" style="display:flex; flex-direction:column; gap:15px; width:100%; max-width:500px; text-align:left;">
+      <form id="formfeedback" action="/send-feedback" method="POST" style="display:flex; flex-direction:column; gap:15px; width:100%; max-width:500px; text-align:left;">
       <label for="username" style="font-size:0.9rem; font-weight:500;">Username</label>
       <input type="text" id="username" name="username" placeholder="Masukkan username Anda" required 
         style="background-color:rgba(73,85,121,0.69); border:1px solid rgba(255,255,255,0.2); border-radius:12px; padding:12px; font-size:1rem; color:#DCF2F1; outline:none;" />
@@ -126,11 +126,12 @@
       <textarea id="message" name="message" placeholder="Tulis pesan Anda di sini" required
         style="background-color:rgba(73,85,121,0.69); border:1px solid rgba(255,255,255,0.2); border-radius:12px; padding:12px; font-size:1rem; color:#DCF2F1; outline:none; min-height:150px; resize:none;"></textarea>
 
-      <button type="submit" 
-        style="align-self:center; background:linear-gradient(to right,#FFD66B,#FFE7A0); color:#1d2b53; padding:0.5rem 1.2rem; font-size:0.9rem; border-radius:25px; font-weight:600; border:none; cursor:pointer; transition:all 0.3s;">
-        Kirim
-      </button>
-    </form>
+        <button type="submit" onclick="window.location.href='formfeedback'"
+          style="align-self:center; background:linear-gradient(to right,#FFD66B,#FFE7A0); color:#1d2b53; padding:0.5rem 1.2rem; font-size:0.9rem; border-radius:25px; font-weight:600; border:none; cursor:pointer; transition:all 0.3s;">
+          Kirim
+        </button>
+      </form>
+    
   </section>
 
 <!-- Footer -->
