@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { Users } = require("../config/database");
+const { Users } = require("../utils/db.js");
 const logger = require('../utils/logger');
 
 const authController = {
