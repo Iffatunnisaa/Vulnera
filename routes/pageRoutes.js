@@ -21,6 +21,14 @@ router.get("/homepage", isAuth, (req, res) => {
   });
 });
 
+// send-feedback
+router.post("/send-feedback", isAuth, (req, res) => {
+  // Proses feedback di sini (misal simpan ke database)
+  // req.body.username, req.body.message
+  req.flash("success", "Terima kasih atas feedback Anda!");
+  res.redirect("/homepage");
+});
+
 // Redirect /uploadcsv ke /admin/uploadcsv
 router.get("/uploadcsv", (req, res) => {
   res.redirect("/admin/uploadcsv");
